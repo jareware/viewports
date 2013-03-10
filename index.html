@@ -9,5 +9,18 @@
 <body>
     <h1>viewport.scss</h1>
     <p>This is a test page for the media queries provided by this micro-lib.</p>
+    <p>The current viewport width is <strong id="current-width">unknown</strong>, so it's considered:</p>
+    <ul id="current-class">
+        <li>tiny</li>
+        <li>small</li>
+        <li>medium</li>
+        <li>large</li>
+    </ul>
+    <script>
+        var $currentWidth = document.querySelector('#current-width');
+        function updateCurrentWidth() { $currentWidth.innerText = window.innerWidth + 'px'; }
+        window.onresize = updateCurrentWidth;
+        updateCurrentWidth();
+    </script>
 </body>
 </html>

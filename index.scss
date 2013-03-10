@@ -6,3 +6,47 @@ body {
     line-height: 20px;
     color: #333333;
 }
+
+@mixin selected {
+    background: gray;
+    color: white;
+}
+
+#current-class {
+
+    margin: 0;
+    padding: 0;
+
+    li {
+
+        float: left;
+        width: 55px;
+        list-style-type: none;
+        border: 1px solid #aaa;
+        margin: 0 10px 10px 0;
+        padding: 10px 20px;
+        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+        text-align: center;
+
+        &:nth-child(1) {
+            @include viewport('tiny') {
+                @include selected;
+            }
+        }
+        &:nth-child(2) {
+            @include viewport('small') {
+                @include selected;
+            }
+        }
+        &:nth-child(3) {
+            @include viewport('medium') {
+                @include selected;
+            }
+        }
+        &:nth-child(4) {
+            @include viewport('large') {
+                @include selected;
+            }
+        }
+    }
+}

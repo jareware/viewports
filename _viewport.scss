@@ -17,5 +17,7 @@ What this configuration means is:
 */
 
 @mixin viewport($name) {
-    // TODO
+    @media (min-width: #{nth(nth($_viewport_config, 1), 1)}) and (max-width: #{nth(nth($_viewport_config, 2), 1) - 1}) {
+        @content;
+    }
 }
