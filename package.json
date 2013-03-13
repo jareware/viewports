@@ -1,0 +1,11 @@
+{
+  "name": "viewport.scss",
+  "version": "0.1.0",
+  "description": "A simple @media query generator for SASS/Compass",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Jarno Rantanen <jarno@jrw.fi>",
+  "license": "MIT"
+}
