@@ -5,16 +5,12 @@ $_viewport_config: (
     /* from */ 1024px /* onwards it's */ "large"    // (landscape iPad width)
     );
 
-/*
-
-What this configuration means is:
-
-    0px         480px       768px       1024px      >9000px
-    \__________/\__________/\__________/\____________...
-       "tiny"      "small"    "medium"      "large"
-       0-479       480-767    768-1023       1024->
-
-*/
+//    What this configuration means is:
+//
+//    0px         480px       768px       1024px      >9000px
+//    \__________/\__________/\__________/\____________...
+//       "tiny"      "small"    "medium"      "large"
+//       0-479       480-767    768-1023       1024->
 
 @mixin viewport($name) {
 
