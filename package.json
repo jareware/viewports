@@ -7,5 +7,8 @@
   },
   "repository": "",
   "author": "Jarno Rantanen <jarno@jrw.fi>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "~1.8.2"
+  }
 }
