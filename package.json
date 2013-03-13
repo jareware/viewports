@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A simple @media query generator for SASS/Compass",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha test/"
   },
   "repository": "",
   "author": "Jarno Rantanen <jarno@jrw.fi>",
