@@ -1,0 +1,7 @@
+@import "../../viewport";
+
+p {
+    @include viewport('tiny') {
+        color: red;
+    }
+}
