@@ -43,10 +43,10 @@ body {
                 @include selected;
             }
         }
-        &:nth-child(4) {
-            @include viewport('large') {
-                @include selected;
-            }
-        }
+        //&:nth-child(4) {
+        //    @include viewport('large') {
+        //        @include selected;
+        //    }
+        //}
     }
 }

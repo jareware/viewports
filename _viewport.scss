@@ -17,7 +17,19 @@ What this configuration means is:
 */
 
 @mixin viewport($name) {
-    @media (min-width: #{nth(nth($_viewport_config, 1), 1)}) and (max-width: #{nth(nth($_viewport_config, 2), 1) - 1}) {
+
+    $rangeIndex: false;
+
+    @for $i from 1 to length($_viewport_config) + 1 {
+        @if (nth(nth($_viewport_config, $i), 2) == $name) {
+            $rangeIndex: $i;
+        }
+    }
+
+    $lowBound: nth($_viewport_config, $rangeIndex);
+    $highBound: nth($_viewport_config, $rangeIndex + 1);
+
+    @media (min-width: #{nth($lowBound, 1)}) and (max-width: #{nth($highBound, 1) - 1}) {
         @content;
     }
 }
