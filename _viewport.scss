@@ -33,7 +33,7 @@ $_viewport_config: (
             @content;
         }
     } @else {
-        $highBound: if($lastRange, null, nth($_viewport_config, $rangeIndex + 1));
+        $highBound: nth($_viewport_config, $rangeIndex + 1);
         @media (min-width: #{nth($lowBound, 1)}) and (max-width: #{nth($highBound, 1) - 1}) {
             @content;
         }
