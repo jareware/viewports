@@ -1,0 +1,7 @@
+@import "../../viewport";
+
+p {
+    @include viewport(up-to 'large') {
+        color: red;
+    }
+}
