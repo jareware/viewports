@@ -1,0 +1,7 @@
+@import "../../viewport";
+
+p {
+    @include viewport(up-to 'medium') {
+        color: red;
+    }
+}
