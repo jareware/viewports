@@ -14,11 +14,19 @@ $_viewport_config: (
 
 @mixin viewport($name) {
 
+    $queryType: 'among';
+    $lookForName: nth($name, 1);
+
+    @if (nth($name, 1) == 'up-to') {
+        $queryType: 'up-to';
+        $lookForName: nth($name, 2);
+    }
+
     $rangeIndex: false;
     $lastRange: false;
 
     @for $i from 1 to length($_viewport_config) + 1 {
-        @if (nth(nth($_viewport_config, $i), 2) == $name) {
+        @if (nth(nth($_viewport_config, $i), 2) == $lookForName) {
             $rangeIndex: $i;
             @if ($i == length($_viewport_config)) {
                 $lastRange: true;
@@ -28,7 +36,12 @@ $_viewport_config: (
 
     $lowBound: nth($_viewport_config, $rangeIndex);
 
-    @if ($lastRange) {
+    @if ($queryType == 'up-to') {
+        $highBound: nth($_viewport_config, $rangeIndex + 1);
+        @media (max-width: #{nth($highBound, 1) - 1}) {
+            @content;
+        }
+    } @else if ($lastRange) {
         @media (min-width: #{nth($lowBound, 1)}) {
             @content;
         }
