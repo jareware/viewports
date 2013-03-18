@@ -17,10 +17,10 @@ describe('viewport.scss', function(done2) {
 
             var expected = fs.readFileSync('test/fixtures/' + match[1] + '.css', 'utf8');
 
-            child_process.exec('sass --style expanded test/fixtures/' + match[1] + '.scss', function callback(err, actual) {
+            child_process.exec('sass --style expanded test/fixtures/' + match[1] + '.scss', function callback(err, actual, stdErr) {
 
                 if (err)
-                    assert.fail(err, 'Could not compile actual SCSS file');
+                    assert.fail(err, 'Could not compile actual SCSS file: ' + stdErr);
 
                 assert.equal(expected, actual);
 
