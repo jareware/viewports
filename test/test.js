@@ -2,16 +2,22 @@ var assert = require('assert');
 var fs = require('fs');
 var child_process = require('child_process');
 
-describe('viewport.scss', function() {
+describe('viewport.scss', function(done2) {
 
-    it('should produce a most basic ranged media query', function(done) {
+    var files = fs.readdirSync('test/fixtures');
 
-        fs.readFile('test/fixtures/barebones.css', 'utf8', function(err, expected) {
+    files.forEach(function(file) {
 
-            if (err)
-                assert.fail(err, 'Could not read expected CSS file');
+        var match = file.match(/(.*)\.scss/);
 
-            child_process.exec('sass --style expanded test/fixtures/barebones.scss', function callback(err, actual) {
+        if (!match)
+            return;
+
+        it('should work with fixture file: ' + file, function(done) {
+
+            var expected = fs.readFileSync('test/fixtures/' + match[1] + '.css', 'utf8');
+
+            child_process.exec('sass --style expanded test/fixtures/' + match[1] + '.scss', function callback(err, actual) {
 
                 if (err)
                     assert.fail(err, 'Could not compile actual SCSS file');
