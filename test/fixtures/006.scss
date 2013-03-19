@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it handles a basic "below" query */
+
+@include viewports(below 'medium') {
+    p { color: red; }
+}
+
+/* should equal */
+
+@media (max-width: 767px) {
+    p { color: red; }
+}
