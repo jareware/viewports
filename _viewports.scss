@@ -72,10 +72,11 @@ $_viewport_config: (
 
     } @else if ($queryType == 'above') {
 
-        $highBound: nth($_viewport_config, $rangeIndex + 1);
-
-        @media (min-width: #{nth($highBound, 1)}) {
-            @content;
+        @if ($lastRange == false) { // saying "above" the last range doesn't make sense
+            $highBound: nth($_viewport_config, $rangeIndex + 1);
+            @media (min-width: #{nth($highBound, 1)}) {
+                @content;
+            }
         }
 
     } @else if ($queryType == 'among') {
