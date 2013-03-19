@@ -1,0 +1,17 @@
+@import "../../viewport";
+
+/* it handles a basic "up-from" query */
+
+p {
+    @include viewport(up-from 'small') {
+        color: red;
+    }
+}
+
+/* should equal */
+
+@media (min-width: 480px) {
+    p {
+        color: red;
+    }
+}

@@ -85,3 +85,32 @@ body {
         }
     }
 }
+
+#up-from {
+
+    li {
+
+        color: gray;
+
+        &:nth-child(1) {
+            @include viewport(up-from 'tiny') {
+                @include selected-2;
+            }
+        }
+        &:nth-child(2) {
+            @include viewport(up-from 'small') {
+                @include selected-2;
+            }
+        }
+        &:nth-child(3) {
+            @include viewport(up-from 'medium') {
+                @include selected-2;
+            }
+        }
+        &:nth-child(4) {
+            @include viewport(up-from 'large') {
+                @include selected-2;
+            }
+        }
+    }
+}

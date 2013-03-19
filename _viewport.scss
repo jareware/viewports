@@ -20,6 +20,9 @@ $_viewport_config: (
     @if (nth($name, 1) == 'up-to') {
         $queryType: 'up-to';
         $lookForName: nth($name, 2);
+    } @else if (nth($name, 1) == 'up-from') {
+        $queryType: 'up-from';
+        $lookForName: nth($name, 2);
     }
 
     $rangeIndex: false;
@@ -45,6 +48,12 @@ $_viewport_config: (
             @media (max-width: #{nth($highBound, 1) - 1}) {
                 @content;
             }
+        }
+
+    } @else if ($queryType == 'up-from') {
+
+        @media (min-width: #{nth($lowBound, 1)}) {
+            @content;
         }
 
     } @else if ($queryType == 'among') {
