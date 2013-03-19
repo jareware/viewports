@@ -1,9 +1,9 @@
-@import "../../viewport";
+@import "../../viewports";
 
 /* it produces the correct media query for the highest range */
 
 p {
-    @include viewport('large') {
+    @include viewports('large') {
         color: red;
     }
 }

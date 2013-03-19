@@ -1,9 +1,9 @@
-@import "../../viewport";
+@import "../../viewports";
 
 /* it produces the most basic media query */
 
 p {
-    @include viewport('tiny') {
+    @include viewports('tiny') {
         color: red;
     }
 }

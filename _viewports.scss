@@ -12,7 +12,7 @@ $_viewport_config: (
 //       "tiny"      "small"    "medium"      "large"
 //       0-479       480-767    768-1023       1024->
 
-@mixin viewport($name) {
+@mixin viewports($name) {
 
     $queryType: 'among';
     $lookForName: nth($name, 1);

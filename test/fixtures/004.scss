@@ -1,9 +1,9 @@
-@import "../../viewport";
+@import "../../viewports";
 
 /* it handles an "up-to" query to the highest range */
 
 p {
-    @include viewport(up-to 'large') {
+    @include viewports(up-to 'large') {
         color: red;
     }
 }

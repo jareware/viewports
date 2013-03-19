@@ -1,5 +1,5 @@
 {
-  "name": "viewport.scss",
+  "name": "viewports.scss",
   "version": "0.1.0",
   "description": "A simple @media query generator for SASS/Compass",
   "scripts": {

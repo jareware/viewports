@@ -4,7 +4,7 @@ var child_process = require('child_process');
 
 var SPEC_FILE_FORMAT = /^([\s\S]*)\/\* it (.+) \*\/([\s\S]*)\/\* should equal \*\/([\s\S]*)$/m;
 
-describe('viewport.scss', function() {
+describe('viewports.scss', function() {
 
     var files = fs.readdirSync('test/fixtures');
 

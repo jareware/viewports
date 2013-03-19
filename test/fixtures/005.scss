@@ -1,9 +1,9 @@
-@import "../../viewport";
+@import "../../viewports";
 
 /* it handles a basic "up-from" query */
 
 p {
-    @include viewport(up-from 'small') {
+    @include viewports(up-from 'small') {
         color: red;
     }
 }

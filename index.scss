@@ -1,4 +1,4 @@
-@import "viewport";
+@import "viewports";
 
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -30,22 +30,22 @@ body {
         text-align: center;
 
         &:nth-child(1) {
-            @include viewport('tiny') {
+            @include viewports('tiny') {
                 @include selected-1;
             }
         }
         &:nth-child(2) {
-            @include viewport('small') {
+            @include viewports('small') {
                 @include selected-1;
             }
         }
         &:nth-child(3) {
-            @include viewport('medium') {
+            @include viewports('medium') {
                 @include selected-1;
             }
         }
         &:nth-child(4) {
-            @include viewport('large') {
+            @include viewports('large') {
                 @include selected-1;
             }
         }
@@ -64,22 +64,22 @@ body {
         color: gray;
 
         &:nth-child(1) {
-            @include viewport(up-to 'tiny') {
+            @include viewports(up-to 'tiny') {
                 @include selected-2;
             }
         }
         &:nth-child(2) {
-            @include viewport(up-to 'small') {
+            @include viewports(up-to 'small') {
                 @include selected-2;
             }
         }
         &:nth-child(3) {
-            @include viewport(up-to 'medium') {
+            @include viewports(up-to 'medium') {
                 @include selected-2;
             }
         }
         &:nth-child(4) {
-            @include viewport(up-to 'large') {
+            @include viewports(up-to 'large') {
                 @include selected-2;
             }
         }
@@ -93,22 +93,22 @@ body {
         color: gray;
 
         &:nth-child(1) {
-            @include viewport(up-from 'tiny') {
+            @include viewports(up-from 'tiny') {
                 @include selected-2;
             }
         }
         &:nth-child(2) {
-            @include viewport(up-from 'small') {
+            @include viewports(up-from 'small') {
                 @include selected-2;
             }
         }
         &:nth-child(3) {
-            @include viewport(up-from 'medium') {
+            @include viewports(up-from 'medium') {
                 @include selected-2;
             }
         }
         &:nth-child(4) {
-            @include viewport(up-from 'large') {
+            @include viewports(up-from 'large') {
                 @include selected-2;
             }
         }
