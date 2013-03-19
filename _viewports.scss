@@ -26,6 +26,9 @@ $_viewport_config: (
     } @else if (nth($name, 1) == 'below') {
         $queryType: 'below';
         $lookForName: nth($name, 2);
+    } @else if (nth($name, 1) == 'above') {
+        $queryType: 'above';
+        $lookForName: nth($name, 2);
     }
 
     $rangeIndex: false;
@@ -65,6 +68,14 @@ $_viewport_config: (
             @media (max-width: #{nth($lowBound, 1) - 1}) {
                 @content;
             }
+        }
+
+    } @else if ($queryType == 'above') {
+
+        $highBound: nth($_viewport_config, $rangeIndex + 1);
+
+        @media (min-width: #{nth($highBound, 1)}) {
+            @content;
         }
 
     } @else if ($queryType == 'among') {
