@@ -7,8 +7,11 @@
     <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
 <body>
+
     <h1>viewport.scss</h1>
     <p>This is a test page for the media queries provided by this micro-lib.</p>
+
+    <h2>Single range of viewports</h2>
     <p>The current viewport width is <strong id="current-width">unknown</strong>, so it's considered:</p>
     <ul id="current-class">
         <li>tiny</li>
@@ -22,5 +25,14 @@
         window.onresize = updateCurrentWidth;
         updateCurrentWidth();
     </script>
+
+    <h2>Viewports up to a range</h2>
+    <ul id="up-to">
+        <li><code>@include viewport(up-to &quot;tiny&quot;)</code> applies right now</li>
+        <li><code>@include viewport(up-to &quot;small&quot;)</code> applies right now</li>
+        <li><code>@include viewport(up-to &quot;medium&quot;)</code> applies right now</li>
+        <li><code>@include viewport(up-to &quot;large&quot;)</code> applies right now</li>
+    </ul>
+
 </body>
 </html>
