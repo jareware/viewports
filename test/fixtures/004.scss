@@ -1,0 +1,15 @@
+@import "../../viewport";
+
+/* it handles an "up-to" query to the highest range */
+
+p {
+    @include viewport(up-to 'large') {
+        color: red;
+    }
+}
+
+/* should equal */
+
+p {
+    color: red;
+}

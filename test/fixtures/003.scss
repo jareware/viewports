@@ -1,0 +1,17 @@
+@import "../../viewport";
+
+/* it handles a basic "up-to" query */
+
+p {
+    @include viewport(up-to 'medium') {
+        color: red;
+    }
+}
+
+/* should equal */
+
+@media (max-width: 1023px) {
+    p {
+        color: red;
+    }
+}

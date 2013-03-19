@@ -2,25 +2,39 @@ var assert = require('assert');
 var fs = require('fs');
 var child_process = require('child_process');
 
-describe('viewport.scss', function(done2) {
+var SPEC_FILE_FORMAT = /^([\s\S]*)\/\* it (.+) \*\/([\s\S]*)\/\* should equal \*\/([\s\S]*)$/m;
+
+describe('viewport.scss', function() {
 
     var files = fs.readdirSync('test/fixtures');
 
     files.forEach(function(file) {
 
-        var match = file.match(/(.*)\.scss/);
+        if (!file.match(/\.scss$/))
+            return; // we're only interested in SCSS files
 
-        if (!match)
-            return;
+        var contents = fs.readFileSync('test/fixtures/' + file, 'utf8');
+        var sections = contents.match(SPEC_FILE_FORMAT);
 
-        it('should work with fixture file: ' + file, function(done) {
+        if (!sections)
+            assert.fail(file + ': File does not appear to follow the spec file format');
 
-            var expected = fs.readFileSync('test/fixtures/' + match[1] + '.css', 'utf8');
+        var description = sections[2].trim();
 
-            child_process.exec('sass --style expanded test/fixtures/' + match[1] + '.scss', function callback(err, actual, stdErr) {
+        it(description, function(done) {
+
+            child_process.exec('sass --style expanded test/fixtures/' + file, function(err, output, stdErr) {
 
                 if (err)
-                    assert.fail(err, 'Could not compile actual SCSS file: ' + stdErr);
+                    assert.fail(file + ': Could not compile: ' + stdErr);
+
+                var sections = output.match(SPEC_FILE_FORMAT);
+
+                if (!sections)
+                    assert.fail(file + ': Malformed output from compiler: ' + output);
+
+                var actual = sections[3].trim();
+                var expected = sections[4].trim();
 
                 assert.equal(expected, actual);
 

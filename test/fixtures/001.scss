@@ -1,0 +1,17 @@
+@import "../../viewport";
+
+/* it produces the most basic media query */
+
+p {
+    @include viewport('tiny') {
+        color: red;
+    }
+}
+
+/* should equal */
+
+@media (min-width: 0px) and (max-width: 479px) {
+    p {
+        color: red;
+    }
+}

@@ -1,7 +1,0 @@
-@import "../../viewport";
-
-p {
-    @include viewport('large') {
-        color: red;
-    }
-}
