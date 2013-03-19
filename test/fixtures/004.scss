@@ -2,14 +2,10 @@
 
 /* it handles an "up-to" query to the highest range */
 
-p {
-    @include viewports(up-to 'large') {
-        color: red;
-    }
+@include viewports(up-to 'large') {
+    p { color: red; }
 }
 
 /* should equal */
 
-p {
-    color: red;
-}
+p { color: red; }

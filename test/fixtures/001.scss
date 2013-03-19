@@ -2,16 +2,12 @@
 
 /* it produces the most basic media query */
 
-p {
-    @include viewports('tiny') {
-        color: red;
-    }
+@include viewports('tiny') {
+    p { color: red; }
 }
 
 /* should equal */
 
 @media (min-width: 0px) and (max-width: 479px) {
-    p {
-        color: red;
-    }
+    p { color: red; }
 }

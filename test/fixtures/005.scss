@@ -2,16 +2,12 @@
 
 /* it handles a basic "up-from" query */
 
-p {
-    @include viewports(up-from 'small') {
-        color: red;
-    }
+@include viewports(up-from 'small') {
+    p { color: red; }
 }
 
 /* should equal */
 
 @media (min-width: 480px) {
-    p {
-        color: red;
-    }
+    p { color: red; }
 }

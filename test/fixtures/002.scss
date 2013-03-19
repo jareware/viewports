@@ -2,16 +2,12 @@
 
 /* it produces the correct media query for the highest range */
 
-p {
-    @include viewports('large') {
-        color: red;
-    }
+@include viewports('large') {
+    p { color: red; }
 }
 
 /* should equal */
 
 @media (min-width: 1024px) {
-    p {
-        color: red;
-    }
+    p { color: red; }
 }
