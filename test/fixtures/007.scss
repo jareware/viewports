@@ -1,0 +1,11 @@
+@import "../../viewports";
+
+/* it handles a "below" query naming the lowest, 0-based range */
+
+@include viewports(below 'tiny') {
+    p { color: red; }
+}
+
+/* should equal */
+
+// nothing

@@ -61,8 +61,10 @@ $_viewport_config: (
 
     } @else if ($queryType == 'below') {
 
-        @media (max-width: #{nth($lowBound, 1) - 1}) {
-            @content;
+        @if (nth($lowBound, 1) > 0) { // saying "below" a range that starts at 0 makes little sense, but for consistency let's tolerate it
+            @media (max-width: #{nth($lowBound, 1) - 1}) {
+                @content;
+            }
         }
 
     } @else if ($queryType == 'among') {
