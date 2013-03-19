@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A simple @media query generator for SASS/Compass",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/"
+    "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500"
   },
   "repository": "",
   "author": "Jarno Rantanen <jarno@jrw.fi>",
