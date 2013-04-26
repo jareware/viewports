@@ -34,6 +34,8 @@ $_viewport_config: (
         $lookForName: nth($name, 2);
     }
 
+    // TODO: "not"..?
+
     $rangeIndex: false;
     $lastRange: false;
 
