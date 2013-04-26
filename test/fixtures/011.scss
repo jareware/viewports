@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it handles a simple "among" query */
+
+@include viewports(among 'small') {
+    p { color: red; }
+}
+
+/* should equal */
+
+@media (min-width: 480px) and (max-width: 767px) {
+    p { color: red; }
+}

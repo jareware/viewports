@@ -29,6 +29,9 @@ $_viewport_config: (
     } @else if (nth($name, 1) == 'above') {
         $queryType: 'above';
         $lookForName: nth($name, 2);
+    } @else if (nth($name, 1) == 'among') {
+        $queryType: 'among';
+        $lookForName: nth($name, 2);
     }
 
     $rangeIndex: false;
