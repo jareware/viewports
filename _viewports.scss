@@ -14,7 +14,7 @@ $_viewport_config: (
 
 @mixin viewports($name) {
 
-    $queryType: 'among';
+    $queryType: 'simple';
     $lookForName: nth($name, 1);
 
     @if (nth($name, 1) == 'up-to') {
@@ -30,8 +30,13 @@ $_viewport_config: (
         $queryType: 'above';
         $lookForName: nth($name, 2);
     } @else if (nth($name, 1) == 'among') {
-        $queryType: 'among';
-        $lookForName: nth($name, 2);
+        @if (length($name) == 2) {
+            $queryType: 'simple';
+            $lookForName: nth($name, 2);
+        } @else {
+            $queryType: 'among';
+            $lookForName: nth($name, 2);
+        }
     }
 
     // TODO: "not"..?
@@ -84,7 +89,7 @@ $_viewport_config: (
             }
         }
 
-    } @else if ($queryType == 'among') {
+    } @else if ($queryType == 'simple') {
 
         @if ($lastRange) {
             @media (min-width: #{nth($lowBound, 1)}) {
@@ -96,5 +101,10 @@ $_viewport_config: (
                 @content;
             }
         }
+
+    } @else if ($queryType == 'among') {
+
+        // TODO
+
     }
 }
