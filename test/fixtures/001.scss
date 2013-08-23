@@ -1,13 +1,13 @@
 @import "../../viewports";
 
-/* it produces the most basic media query */
+/* it produces the most basic media query, naming a single range */
 
-@include viewports('tiny') {
+@include viewports('small') {
     p { color: red; }
 }
 
 /* should equal */
 
-@media (min-width: 0px) and (max-width: 479px) {
+@media (min-width: 481px) and (max-width: 768px) {
     p { color: red; }
 }

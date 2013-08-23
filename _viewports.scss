@@ -1,8 +1,8 @@
 $_viewport_config: (
-    /* from */    0px /* onwards it's */ "tiny",
-    /* from */  480px /* onwards it's */ "small",   // (just an arbitrary value)
-    /* from */  768px /* onwards it's */ "medium",  // (portrait iPad width)
-    /* from */ 1024px /* onwards it's */ "large"    // (landscape iPad width)
+    up-to  480px it-is "tiny",
+    up-to  768px it-is "small",  // (portrait iPad width, for reference)
+    up-to 1024px it-is "medium", // (landscape iPad width, for reference)
+    beyond-that  it-is "large"
     );
 
 //    What this configuration means is:
@@ -10,7 +10,7 @@ $_viewport_config: (
 //    0px         480px       768px       1024px      >9000px
 //    \__________/\__________/\__________/\____________...
 //       "tiny"      "small"    "medium"      "large"
-//       0-479       480-767    768-1023       1024->
+//       0-480       481-768    769-1024       1025->
 
 @mixin viewports($name) {
 

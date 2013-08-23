@@ -1,6 +1,6 @@
 @import "../../viewports";
 
-/* it handles a "below" query naming the lowest, 0-based range */
+/* it handles a "below" query naming the lowest range */
 
 @include viewports(below 'tiny') {
     p { color: red; }
