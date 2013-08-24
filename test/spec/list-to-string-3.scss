@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it works expectedly with an empty list */
+
+p {
+    content: list-to-string(());
+}
+
+/* should equal */
+
+p {
+    content: "";
+}

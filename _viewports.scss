@@ -77,6 +77,22 @@ $_viewport_config: (
     }
 }
 
+// Returns the given $list imploded into a string.
+//
+// @example list-to-string(12 34 56, ";") => "12;34;56"
+//
+@function list-to-string($list, $glueString: ', ') {
+    $return: '';
+    @for $i from 1 to length($list) + 1 {
+        @if ($i == 1) {
+            $return: "#{nth($list, $i)}";
+        } @else {
+            $return: "#{$return}#{$glueString}#{nth($list, $i)}";
+        }
+    }
+    @return $return;
+}
+
 @mixin viewports($queryConfig) {
 
     $DEBUG: true;

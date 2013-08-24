@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it uses comma-separation as the default glue method */
+
+p {
+    content: list-to-string('foo' 'bar' 'baz');
+}
+
+/* should equal */
+
+p {
+    content: "foo, bar, baz";
+}

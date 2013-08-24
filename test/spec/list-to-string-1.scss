@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it glues together given list items and returns a string */
+
+p {
+    content: list-to-string(12 34 56, ", ");
+}
+
+/* should equal */
+
+p {
+    content: "12, 34, 56";
+}
