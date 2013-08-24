@@ -87,6 +87,7 @@ $_viewport_config: (
 
     @if (index($VALID_TYPES, $queryType) == false) { // ensure valid query type always present
         $queryConfig: join($DEFAULT_TYPE, $queryConfig);
+        $queryType: $DEFAULT_TYPE;
     }
 
     @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
@@ -137,6 +138,8 @@ $_viewport_config: (
             } @else {
                 $bounds: join(nth($bounds, 2) + 1px, false);
             }
+        } @else {
+            @warn 'Internal error: Unknown query type "#{$queryType}"';
         }
 
         $mediaQueryList: media-query-for-bounds($bounds);
