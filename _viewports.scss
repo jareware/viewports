@@ -12,17 +12,16 @@ $_viewport_config: (
 //       "tiny"      "small"    "medium"      "large"
 //       <-480       481-768    769-1024       1025->
 
-/**
- * Returns a tuple representing the range in which the given $namedRange applies.
- * For ranges that are unbound at either end, returns <false> for that end.
- *
- * @example "small" => [ 481px, 768px ]
- * @example "large" => [ 1025px, false ]
- *
- * Also implicitly checks the format of $_viewport_config, and emits warnings accordingly.
- *
- * @return list
- */
+// Returns a tuple representing the range in which the given $namedRange applies.
+// For ranges that are unbound at either end, returns <false> for that end.
+//
+// @example "small" => [ 481px, 768px ]
+// @example "large" => [ 1025px, false ]
+//
+// Also implicitly checks the format of $_viewport_config, and emits warnings accordingly.
+//
+// @return list
+//
 @function bounds-for-range($namedRange) {
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
@@ -51,20 +50,19 @@ $_viewport_config: (
     @warn 'Invalid named range: #{$namedRange}';
 }
 
-/**
- * Returns a media query expression for the given bounds.
- *
- * @example [ 481px, 768px ] => "(min-width: 481px) and (max-width: 768px)"
- * @example [ 481px, false ] => "(min-width: 481px)"
- *
- * Returns a boolean value for the two special cases, that is, <true> for a
- * boundless range, and <false> for an impossible one:
- *
- * @example [ false, false ] => true
- * @example false => false
- *
- * @return string | boolean
- */
+// Returns a media query expression for the given bounds.
+//
+// @example [ 481px, 768px ] => "(min-width: 481px) and (max-width: 768px)"
+// @example [ 481px, false ] => "(min-width: 481px)"
+//
+// Returns a boolean value for the two special cases, that is, <true> for a
+// boundless range, and <false> for an impossible one:
+//
+// @example [ false, false ] => true
+// @example false => false
+//
+// @return string | boolean
+//
 @function media-query-for-bounds($bounds) {
     @if ($bounds == false) {
         @return false; // range is impossible, and NEVER applies
