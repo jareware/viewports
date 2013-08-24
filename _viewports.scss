@@ -29,16 +29,16 @@ $_viewport_config: (
             @if (nth($row, 4) == $namedRange) { // name matches
                 @if ($i > 1) { // range with a lower neighbor
                     $prevRow: nth($_viewport_config, $i - 1);
-                    @return (nth($prevRow, 2) + 1) nth($row, 2); // return with [lbound, ubound]
+                    @return (nth($prevRow, 2) + 1), nth($row, 2); // return with [lbound, ubound]
                 } @else { // lowest range (e.g. from 0)
-                    @return false nth($row, 2); // return with [false, ubound]
+                    @return false, nth($row, 2); // return with [false, ubound]
                 }
             }
         } @else if (length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is') { // uppermost range specification
             @if (nth($row, 3) == $namedRange) { // name matches
                 @if ($i > 1) { // range with a lower neighbor
                     $prevRow: nth($_viewport_config, $i - 1);
-                    @return (nth($prevRow, 2) + 1) false; // return with [lbound, false]
+                    @return (nth($prevRow, 2) + 1), false; // return with [lbound, false]
                 } @else {
                     @warn 'Found a "beyond-that" specification with no lower bound';
                 }
