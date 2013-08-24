@@ -15,25 +15,41 @@ $_viewport_config: (
 @function bounds-for-range($namedRange) {
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
-        @if (nth($row, 1) == 'up-to') { // standard range specification
+        @if (length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is') { // standard range specification
             @if (nth($row, 4) == $namedRange) { // name matches
                 @if ($i > 1) { // range with a lower neighbor
                     $prevRow: nth($_viewport_config, $i - 1);
                     @return (nth($prevRow, 2) + 1) nth($row, 2); // return with [lbound, ubound]
                 } @else { // lowest range (e.g. from 0)
-                    @return null nth($row, 2); // return with [null, ubound]
+                    @return false nth($row, 2); // return with [false, ubound]
                 }
             }
-        } @else if (nth($row, 1) == 'beyond-that') { // uppermost range specification
+        } @else if (length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is') { // uppermost range specification
             @if (nth($row, 3) == $namedRange) { // name matches
-                $prevRow: nth($_viewport_config, $i - 1); // TODO: What if no lower neighbor? Edge-case..?
-                @return (nth($prevRow, 2) + 1) null; // return with [lbound, null]
+                @if ($i > 1) { // range with a lower neighbor
+                    $prevRow: nth($_viewport_config, $i - 1);
+                    @return (nth($prevRow, 2) + 1) false; // return with [lbound, false]
+                } @else {
+                    @warn 'Found a "beyond-that" specification with no lower bound';
+                }
             }
         } @else { // invalid specification format
             @warn 'Invalid range specification format: #{$row}';
         }
     }
     @warn 'Invalid named range: #{$namedRange}';
+}
+
+@function media-query-for-bounds($bounds) {
+    @if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
+        @return '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
+    } @else if (nth($bounds, 1) == false and nth($bounds, 2) != false) {
+        @return '(max-width: #{nth($bounds, 2)})';
+    } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
+        @return '(min-width: #{nth($bounds, 1)})';
+    } @else {
+        @warn 'Internal error: range is unbound at both ends';
+    }
 }
 
 @mixin viewports($queryConfig) {
@@ -50,7 +66,7 @@ $_viewport_config: (
 
     @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
 
-    $totalOutput: '';
+    $mediaQueryList: '';
 
     @for $i from 2 to length($queryConfig) + 1 { // for each named range
 
@@ -59,27 +75,15 @@ $_viewport_config: (
 
         @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>'; }
 
-        $currentOutput: '';
-
-        @if (nth($bounds, 1) != null and nth($bounds, 2) != null) {
-            $currentOutput: '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
-        } @else if (nth($bounds, 1) == null and nth($bounds, 2) != null) {
-            $currentOutput: '(max-width: #{nth($bounds, 2)})';
-        } @else if (nth($bounds, 1) != null and nth($bounds, 2) == null) {
-            $currentOutput: '(min-width: #{nth($bounds, 1)})';
-        } @else {
-            @warn 'Internal error: range is unbound at both ends';
-        }
-
         @if ($i == 2) {
-            $totalOutput: '#{$currentOutput}';
+            $mediaQueryList: '#{media-query-for-bounds($bounds)}';
         } @else {
-            $totalOutput: '#{$totalOutput}, #{$currentOutput}';
+            $mediaQueryList: '#{$mediaQueryList}, #{media-query-for-bounds($bounds)}';
         }
 
     }
 
-    @media #{$totalOutput} {
+    @media #{$mediaQueryList} {
         @content;
     }
 
