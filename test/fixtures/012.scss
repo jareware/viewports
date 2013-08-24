@@ -8,6 +8,6 @@
 
 /* should equal */
 
-@media (min-width: 0px) and (max-width: 480px), (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 480px), (min-width: 769px) and (max-width: 1024px) {
     p { color: red; }
 }

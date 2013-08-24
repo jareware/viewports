@@ -12,99 +12,75 @@ $_viewport_config: (
 //       "tiny"      "small"    "medium"      "large"
 //       0-480       481-768    769-1024       1025->
 
-@mixin viewports($name) {
-
-    $queryType: 'simple';
-    $lookForName: nth($name, 1);
-
-    @if (nth($name, 1) == 'up-to') {
-        $queryType: 'up-to';
-        $lookForName: nth($name, 2);
-    } @else if (nth($name, 1) == 'up-from') {
-        $queryType: 'up-from';
-        $lookForName: nth($name, 2);
-    } @else if (nth($name, 1) == 'below') {
-        $queryType: 'below';
-        $lookForName: nth($name, 2);
-    } @else if (nth($name, 1) == 'above') {
-        $queryType: 'above';
-        $lookForName: nth($name, 2);
-    } @else if (nth($name, 1) == 'among') {
-        @if (length($name) == 2) {
-            $queryType: 'simple';
-            $lookForName: nth($name, 2);
-        } @else {
-            $queryType: 'among';
-            $lookForName: nth($name, 2);
+@function bounds-for-range($namedRange) {
+    @for $i from 1 to length($_viewport_config) + 1 { // for each config row
+        $row: nth($_viewport_config, $i);
+        @if (nth($row, 1) == 'up-to') { // standard range specification
+            @if (nth($row, 4) == $namedRange) { // name matches
+                @if ($i > 1) { // range with a lower neighbor
+                    $prevRow: nth($_viewport_config, $i - 1);
+                    @return (nth($prevRow, 2) + 1) nth($row, 2); // return with [lbound, ubound]
+                } @else { // lowest range (e.g. from 0)
+                    @return null nth($row, 2); // return with [null, ubound]
+                }
+            }
+        } @else if (nth($row, 1) == 'beyond-that') { // uppermost range specification
+            @if (nth($row, 3) == $namedRange) { // name matches
+                $prevRow: nth($_viewport_config, $i - 1); // TODO: What if no lower neighbor? Edge-case..?
+                @return (nth($prevRow, 2) + 1) null; // return with [lbound, null]
+            }
+        } @else { // invalid specification format
+            @warn 'Invalid range specification format: #{$row}';
         }
     }
+    @warn 'Invalid named range: #{$namedRange}';
+}
 
-    // TODO: "not"..?
+@mixin viewports($queryConfig) {
 
-    $rangeIndex: false;
-    $lastRange: false;
+    $DEBUG: true;
+    $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among';
+    $DEFAULT_TYPE: 'among';
 
-    @for $i from 1 to length($_viewport_config) + 1 {
-        @if (nth(nth($_viewport_config, $i), 2) == $lookForName) {
-            $rangeIndex: $i;
-            @if ($i == length($_viewport_config)) {
-                $lastRange: true;
-            }
-        }
+    $queryType: nth($queryConfig, 1);
+
+    @if (index($VALID_TYPES, $queryType) == false) { // ensure valid query type always present
+        $queryConfig: join($DEFAULT_TYPE, $queryConfig);
     }
 
-    $lowBound: nth($_viewport_config, $rangeIndex);
+    @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
 
-    @if ($queryType == 'up-to') {
+    $totalOutput: '';
 
-        @if ($lastRange) { // saying "up-to" a last range doesn't really make sense, but for consistency let's tolerate it
-            @content;
+    @for $i from 2 to length($queryConfig) + 1 { // for each named range
+
+        $rangeName: nth($queryConfig, $i);
+        $bounds: bounds-for-range($rangeName);
+
+        @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>'; }
+
+        $currentOutput: '';
+
+        @if (nth($bounds, 1) != null and nth($bounds, 2) != null) {
+            $currentOutput: '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
+        } @else if (nth($bounds, 1) == null and nth($bounds, 2) != null) {
+            $currentOutput: '(max-width: #{nth($bounds, 2)})';
+        } @else if (nth($bounds, 1) != null and nth($bounds, 2) == null) {
+            $currentOutput: '(min-width: #{nth($bounds, 1)})';
         } @else {
-            $highBound: nth($_viewport_config, $rangeIndex + 1);
-            @media (max-width: #{nth($highBound, 1) - 1}) {
-                @content;
-            }
+            @warn 'Internal error: range is unbound at both ends';
         }
 
-    } @else if ($queryType == 'up-from') {
-
-        @media (min-width: #{nth($lowBound, 1)}) {
-            @content;
-        }
-
-    } @else if ($queryType == 'below') {
-
-        @if (nth($lowBound, 1) > 0) { // saying "below" a range that starts at 0 makes little sense, but for consistency let's tolerate it
-            @media (max-width: #{nth($lowBound, 1) - 1}) {
-                @content;
-            }
-        }
-
-    } @else if ($queryType == 'above') {
-
-        @if ($lastRange == false) { // saying "above" the last range doesn't make sense
-            $highBound: nth($_viewport_config, $rangeIndex + 1);
-            @media (min-width: #{nth($highBound, 1)}) {
-                @content;
-            }
-        }
-
-    } @else if ($queryType == 'simple') {
-
-        @if ($lastRange) {
-            @media (min-width: #{nth($lowBound, 1)}) {
-                @content;
-            }
+        @if ($i == 2) {
+            $totalOutput: '#{$currentOutput}';
         } @else {
-            $highBound: nth($_viewport_config, $rangeIndex + 1);
-            @media (min-width: #{nth($lowBound, 1)}) and (max-width: #{nth($highBound, 1) - 1}) {
-                @content;
-            }
+            $totalOutput: '#{$totalOutput}, #{$currentOutput}';
         }
-
-    } @else if ($queryType == 'among') {
-
-        // TODO
 
     }
+
+    @media #{$totalOutput} {
+        @content;
+    }
+
 }
