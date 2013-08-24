@@ -10,8 +10,19 @@ $_viewport_config: (
 //    0px         480px       768px       1024px      >9000px
 //    \__________/\__________/\__________/\____________...
 //       "tiny"      "small"    "medium"      "large"
-//       0-480       481-768    769-1024       1025->
+//       <-480       481-768    769-1024       1025->
 
+/**
+ * Returns a tuple representing the range in which the given $namedRange applies.
+ * For ranges that are unbound at either end, returns <false> for that end.
+ *
+ * @example "small" => [ 481px, 768px ]
+ * @example "large" => [ 1025px, false ]
+ *
+ * Also implicitly checks the format of $_viewport_config, and emits warnings accordingly.
+ *
+ * @return list
+ */
 @function bounds-for-range($namedRange) {
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
@@ -40,15 +51,31 @@ $_viewport_config: (
     @warn 'Invalid named range: #{$namedRange}';
 }
 
+/**
+ * Returns a media query expression for the given bounds.
+ *
+ * @example [ 481px, 768px ] => "(min-width: 481px) and (max-width: 768px)"
+ * @example [ 481px, false ] => "(min-width: 481px)"
+ *
+ * Returns a boolean value for the two special cases, that is, <true> for a
+ * boundless range, and <false> for an impossible one:
+ *
+ * @example [ false, false ] => true
+ * @example false => false
+ *
+ * @return string | boolean
+ */
 @function media-query-for-bounds($bounds) {
-    @if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
+    @if ($bounds == false) {
+        @return false; // range is impossible, and NEVER applies
+    } @else if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
         @return '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
     } @else if (nth($bounds, 1) == false and nth($bounds, 2) != false) {
         @return '(max-width: #{nth($bounds, 2)})';
     } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
         @return '(min-width: #{nth($bounds, 1)})';
     } @else {
-        @return true; // range is unbound at both ends, and always applies
+        @return true; // range is unbound at both ends, and ALWAYS applies
     }
 }
 
@@ -98,14 +125,30 @@ $_viewport_config: (
 
         @if ($queryType == 'up-to') {
             $bounds: join(false, nth($bounds, 2));
+        } @else if ($queryType == 'up-from') {
+            $bounds: join(nth($bounds, 1), false);
+        } @else if ($queryType == 'below') {
+            @if (nth($bounds, 1) == false) {
+                $bounds: false; // impossible range selected
+            } @else {
+                $bounds: join(false, nth($bounds, 1) - 1px);
+            }
+        } @else if ($queryType == 'above') {
+            @if (nth($bounds, 2) == false) {
+                $bounds: false; // impossible range selected
+            } @else {
+                $bounds: join(nth($bounds, 2) + 1px, false);
+            }
         }
 
         $mediaQueryList: media-query-for-bounds($bounds);
 
     }
 
-    @if ($mediaQueryList == true) { // @content should always apply (e.g. a range unbound at both ends)
+    @if ($mediaQueryList == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
         @content;
+    } @else if ($mediaQueryList == false) { // @content should NEVER apply (e.g. impossible range selection)
+        // nothing
     } @else {
         @media #{$mediaQueryList} {
             @content;
