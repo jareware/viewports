@@ -20,7 +20,7 @@ describe('viewports.scss', function() {
         if (!sections)
             assert.fail(file + ': File does not appear to follow the spec file format');
 
-        var description = sections[2].trim();
+        var description = sections[2].trim() + ' (' + file + ')';
         var cmd = 'sass --style expanded ' + SPEC_FILE_PATH + '/' + file;
 
         it(description, function(done) {
