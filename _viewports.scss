@@ -48,7 +48,7 @@ $_viewport_config: (
     } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
         @return '(min-width: #{nth($bounds, 1)})';
     } @else {
-        @warn 'Internal error: range is unbound at both ends';
+        @return true; // range is unbound at both ends, and always applies
     }
 }
 
@@ -68,23 +68,48 @@ $_viewport_config: (
 
     $mediaQueryList: '';
 
-    @for $i from 2 to length($queryConfig) + 1 { // for each named range
+    @if ($queryType == 'among') {
 
-        $rangeName: nth($queryConfig, $i);
+        @for $i from 2 to length($queryConfig) + 1 { // for each named range
+
+            $rangeName: nth($queryConfig, $i);
+            $bounds: bounds-for-range($rangeName);
+
+            @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>'; }
+
+            // TODO: What if: a range unbound at both ends?
+
+            @if ($i == 2) {
+                $mediaQueryList: '#{media-query-for-bounds($bounds)}';
+            } @else {
+                $mediaQueryList: '#{$mediaQueryList}, #{media-query-for-bounds($bounds)}';
+            }
+
+        }
+
+    } @else {
+
+        @if (length($queryConfig) != 2) {
+            @warn 'For query type "#{$queryType}", only a single range should be named';
+        }
+
+        $rangeName: nth($queryConfig, 2);
         $bounds: bounds-for-range($rangeName);
 
-        @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>'; }
-
-        @if ($i == 2) {
-            $mediaQueryList: '#{media-query-for-bounds($bounds)}';
-        } @else {
-            $mediaQueryList: '#{$mediaQueryList}, #{media-query-for-bounds($bounds)}';
+        @if ($queryType == 'up-to') {
+            $bounds: join(false, nth($bounds, 2));
         }
+
+        $mediaQueryList: media-query-for-bounds($bounds);
 
     }
 
-    @media #{$mediaQueryList} {
+    @if ($mediaQueryList == true) { // @content should always apply (e.g. a range unbound at both ends)
         @content;
+    } @else {
+        @media #{$mediaQueryList} {
+            @content;
+        }
     }
 
 }
