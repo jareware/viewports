@@ -108,7 +108,7 @@ $_viewport_config: (
 
     @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
 
-    $mediaQueryList: '';
+    $mediaQueryList: ();
 
     @if ($queryType == 'among') {
 
@@ -116,16 +116,11 @@ $_viewport_config: (
 
             $rangeName: nth($queryConfig, $i);
             $bounds: bounds-for-range($rangeName);
+            $mediaQuery: media-query-for-bounds($bounds);
 
-            @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>'; }
+            @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
 
-            // TODO: What if: a range unbound at both ends?
-
-            @if ($i == 2) {
-                $mediaQueryList: '#{media-query-for-bounds($bounds)}';
-            } @else {
-                $mediaQueryList: '#{$mediaQueryList}, #{media-query-for-bounds($bounds)}';
-            }
+            $mediaQueryList: append($mediaQueryList, $mediaQuery);
 
         }
 
@@ -167,6 +162,7 @@ $_viewport_config: (
     } @else if ($mediaQueryList == false) { // @content should NEVER apply (e.g. impossible range selection)
         // nothing
     } @else {
+        $mediaQueryList: list-to-string($mediaQueryList, ', ');
         @media #{$mediaQueryList} {
             @content;
         }
