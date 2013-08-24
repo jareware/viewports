@@ -117,10 +117,9 @@ $_viewport_config: (
             $rangeName: nth($queryConfig, $i);
             $bounds: bounds-for-range($rangeName);
             $mediaQuery: media-query-for-bounds($bounds);
+            $mediaQueryList: append($mediaQueryList, $mediaQuery);
 
             @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
-
-            $mediaQueryList: append($mediaQueryList, $mediaQuery);
 
         }
 
@@ -154,6 +153,8 @@ $_viewport_config: (
         }
 
         $mediaQueryList: media-query-for-bounds($bounds);
+
+        @if ($DEBUG) { @debug '$bounds: <#{$bounds}>, $mediaQueryList: <#{$mediaQueryList}>'; }
 
     }
 

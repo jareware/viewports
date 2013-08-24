@@ -1,0 +1,11 @@
+@import "../../viewports";
+
+/* it handles a "up-from" query from the smallest range */
+
+@include viewports(up-from 'tiny') {
+    p { color: red; }
+}
+
+/* should equal */
+
+p { color: red; }
