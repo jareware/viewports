@@ -40,33 +40,30 @@ $_viewport_config:
 // @example "small" => [ 481px, 768px ]
 // @example "large" => [ 1025px, false ]
 //
-// Also implicitly checks the format of $_viewport_config, and emits warnings accordingly.
+// Emits a warning if the range isn't found.
 //
 // @return list
 //
 @function bounds-for-range($namedRange) {
+    @if not validate-config() {
+        @return null;
+    }
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
-        @if (length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is') { // standard range specification
-            @if (nth($row, 4) == $namedRange) { // name matches
-                @if ($i > 1) { // range with a lower neighbor
+        @if nth($row, 1) == 'up-to' { // standard range specification
+            @if nth($row, 4) == $namedRange { // name matches
+                @if $i > 1 { // range with a lower neighbor
                     $prevRow: nth($_viewport_config, $i - 1);
-                    @return (nth($prevRow, 2) + 1), nth($row, 2); // return with [lbound, ubound]
+                    @return nth($prevRow, 2) + 1, nth($row, 2); // return with [lbound, ubound]
                 } @else { // lowest range (e.g. from 0)
                     @return false, nth($row, 2); // return with [false, ubound]
                 }
             }
-        } @else if (length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is') { // uppermost range specification
-            @if (nth($row, 3) == $namedRange) { // name matches
-                @if ($i > 1) { // range with a lower neighbor
-                    $prevRow: nth($_viewport_config, $i - 1);
-                    @return (nth($prevRow, 2) + 1), false; // return with [lbound, false]
-                } @else {
-                    @warn 'Found a "beyond-that" specification with no lower bound';
-                }
+        } @else if nth($row, 1) == 'beyond-that' { // uppermost range specification
+            @if nth($row, 3) == $namedRange { // name matches
+                $prevRow: nth($_viewport_config, $i - 1);
+                @return nth($prevRow, 2) + 1, false; // return with [lbound, false]
             }
-        } @else { // invalid specification format
-            @warn 'Invalid range specification format: #{$row}';
         }
     }
     @warn 'Invalid named range: #{$namedRange}';
