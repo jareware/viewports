@@ -1,0 +1,17 @@
+$_viewport_config:
+    up-to  480px it-is "tiny" herp-derp,
+    beyond-that  it-is "large";
+
+@import "../../viewports";
+
+/* it won't validate a broken config */
+
+p {
+    content: "#{validate-config()}";
+}
+
+/* should equal */
+
+p {
+    content: "false";
+}

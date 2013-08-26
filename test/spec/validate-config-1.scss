@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it validates the default config */
+
+p {
+    content: "#{validate-config()}";
+}
+
+/* should equal */
+
+p {
+    content: "true";
+}
