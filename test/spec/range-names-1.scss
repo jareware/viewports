@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it lists the currently configured ranges */
+
+p {
+    content: range-names();
+}
+
+/* should equal */
+
+p {
+    content: "tiny" "small" "medium" "large";
+}

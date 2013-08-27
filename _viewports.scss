@@ -34,6 +34,27 @@ $_viewport_config:
     @return true;
 }
 
+// Returns the list of configured named ranges.
+//
+// @return list
+//
+@function range-names() {
+    @if not validate-config() {
+        @return null;
+    }
+    $return: ();
+    @for $i from 1 to length($_viewport_config) + 1 { // for each config row
+        $row: nth($_viewport_config, $i);
+        @if nth($row, 1) == 'up-to' { // standard range specification
+            $return: append($return, nth($row, 4));
+        } @else if nth($row, 1) == 'beyond-that' { // uppermost range specification
+            $return: append($return, nth($row, 3));
+        }
+    }
+    @return $return;
+}
+
+
 // Returns a tuple representing the range in which the given $namedRange applies.
 // For ranges that are unbound at either end, returns <false> for that end.
 //
