@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it handles a "not" query for a single range */
+
+@include viewports('not' 'small') {
+    p { color: red; }
+}
+
+/* should equal */
+
+@media (max-width: 480px), (min-width: 769px) and (max-width: 1024px), (min-width: 1025px) {
+    p { color: red; }
+}

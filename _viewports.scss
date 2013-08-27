@@ -136,12 +136,12 @@ $_viewport_config:
 @mixin viewports($queryConfig) {
 
     $DEBUG: true;
-    $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among';
+    $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
     $DEFAULT_TYPE: 'among';
 
     $queryType: nth($queryConfig, 1);
 
-    @if (index($VALID_TYPES, $queryType) == false) { // ensure valid query type always present
+    @if index($VALID_TYPES, $queryType) == false { // ensure valid query type always present
         $queryConfig: join($DEFAULT_TYPE, $queryConfig);
         $queryType: $DEFAULT_TYPE;
     }
@@ -160,6 +160,22 @@ $_viewport_config:
             $mediaQueryList: append($mediaQueryList, $mediaQuery);
 
             @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
+
+        }
+
+    } @else if ($queryType == 'not') {
+
+        @each $rangeName in range-names() {
+
+            @if index($queryConfig, $rangeName) == false {
+
+                $bounds: bounds-for-range($rangeName);
+                $mediaQuery: media-query-for-bounds($bounds);
+                $mediaQueryList: append($mediaQueryList, $mediaQuery);
+
+                @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
+
+            }
 
         }
 
