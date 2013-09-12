@@ -1,5 +1,19 @@
 @import "viewports";
 
+$textColor: #333333;
+$borderWidth: 2px;
+$borderColor: #aaa;
+$pegHeight: 10px;
+$liTopPad: 20px;
+$arrowSize: 10px;
+$visuWidth: 500px;
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -8,26 +22,55 @@ body {
 }
 
 @mixin selected-1 {
-    background: gray;
-    color: white;
+    background-color: lighten($borderColor, 30%);
+    color: $textColor;
+}
+
+#current-width {
+    width: $visuWidth;
+    position: relative;
+
+    > div { // cursor
+        position: absolute;
+    }
 }
 
 #current-class {
-
     margin: 0;
     padding: 0;
     overflow: hidden;
+    position: relative;
+    width: $visuWidth;
 
     li {
-
         float: left;
-        width: 55px;
+        height: $pegHeight;
         list-style-type: none;
-        border: 1px solid #aaa;
-        margin: 0 10px 10px 0;
-        padding: 10px 20px;
+        border-style: solid;
+        border-color: $borderColor;
+        border-width: $borderWidth 0 0 $borderWidth;
+        margin: $liTopPad 0 40px 0;
+        padding: $pegHeight 0 0 0;
         font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+        font-size: 14px;
         text-align: center;
+        color: lighten($textColor, 50%);
+        position: relative;
+
+        > div {
+
+            &:nth-child(1) {
+                position: absolute;
+                width: 100px;
+                right: -50px;
+                top: $pegHeight;
+                font-size: 10px;
+                color: lighten($textColor, 50%);
+            }
+            &:nth-child(2) {
+                margin-top: 10px;
+            }
+        }
 
         &:nth-child(1) {
             @include viewports('tiny') {

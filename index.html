@@ -9,21 +9,52 @@
 <body>
 
     <h1>viewports.scss</h1>
-    <p>This is a test page for the media queries provided by this micro-lib.</p>
+    <p>This is a test page for the media queries provided.</p>
 
-    <h2>Single range of viewports</h2>
-    <p>The current viewport width is <strong id="current-width">unknown</strong>, so it's considered:</p>
-    <ul id="current-class">
-        <li>tiny</li>
-        <li>small</li>
-        <li>medium</li>
-        <li>large</li>
-    </ul>
+    <h2>Configured viewport ranges</h2>
+    <div id="current-width">
+        <div id="width-cursor"></div>
+    </div>
+    <ul id="current-class"></ul>
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
     <script>
-        var $currentWidth = document.querySelector('#current-width');
-        function updateCurrentWidth() { $currentWidth.innerText = window.innerWidth + 'px'; }
-        window.onresize = updateCurrentWidth;
-        updateCurrentWidth();
+        $(function() {
+
+            var NAME   = 0;
+            var WIDTH  = 1;
+            var CONFIG = [
+                [ 'tiny',    480 ],
+                [ 'small',   768 ],
+                [ 'medium', 1024 ],
+                [ 'large'        ]
+            ];
+
+            var rangeSum = CONFIG.reduce(function(memo, range) {
+                return memo + (range[WIDTH] || 0);
+            }, 0);
+
+            var rangeAvg = rangeSum / CONFIG.length;
+
+            $('#current-class').append($.map(CONFIG, function(range) {
+                var width = ((range[WIDTH] || rangeAvg) * 100 / (rangeSum + rangeAvg)) + '%';
+                return $('<li>').css({ width: width }).append(
+                    $('<div>').text(range[WIDTH] ? range[WIDTH] + 'px' : ''),
+                    $('<div>').text(range[NAME])
+                );
+            }));
+
+            var $widthCursor = $('#current-width > div');
+
+            function updateCurrentWidth() {
+                $widthCursor.text(window.innerWidth + 'px').css({ left: (window.innerWidth * 100 / (rangeSum + rangeAvg)) + '%' });
+            }
+
+            window.onresize = updateCurrentWidth;
+            updateCurrentWidth();
+
+        });
     </script>
 
 </body>
