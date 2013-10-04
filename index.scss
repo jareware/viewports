@@ -4,9 +4,13 @@ $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
 $pegHeight: 10px;
-$liTopPad: 20px;
-$arrowSize: 10px;
+$liTopPad: 0px;
+$liBotPad: 50px;
+$arrowSize: 7px;
+$arrowColor: black;
 $visuWidth: 500px;
+$cursorWidth: 100px;
+$cursorHeight: 30px;
 
 * {
     -webkit-box-sizing: border-box;
@@ -28,14 +32,34 @@ body {
 
 #current-width {
     width: $visuWidth;
+    height: $cursorHeight;
     position: relative;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 14px;
 
     > div { // cursor
         position: absolute;
+        width: $cursorWidth;
+        height: $cursorHeight;
+        text-align: center;
+        margin-left: $cursorWidth / -2;
+
+        &::after {
+            content: '';
+            position: absolute;
+            left: ($cursorWidth / 2) - $arrowSize;
+            bottom: -$arrowSize;
+            width: 0;
+            height: 0;
+            border-width: $arrowSize;
+            border-color: transparent;
+            border-style: solid;
+            border-top: $arrowSize solid $arrowColor;
+        }
     }
 }
 
-#current-class {
+ul#current-class {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -49,7 +73,7 @@ body {
         border-style: solid;
         border-color: $borderColor;
         border-width: $borderWidth 0 0 $borderWidth;
-        margin: $liTopPad 0 40px 0;
+        margin: $liTopPad 0 $liBotPad 0;
         padding: $pegHeight 0 0 0;
         font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
         font-size: 14px;
@@ -68,7 +92,7 @@ body {
                 color: lighten($textColor, 50%);
             }
             &:nth-child(2) {
-                margin-top: 10px;
+                margin-top: 20px;
             }
         }
 

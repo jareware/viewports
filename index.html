@@ -22,8 +22,8 @@
     <script>
         $(function() {
 
-            var NAME   = 0;
-            var WIDTH  = 1;
+            var NAME   = 0; // key to below table
+            var WIDTH  = 1; // key to below table
             var CONFIG = [
                 [ 'tiny',    480 ],
                 [ 'small',   768 ],
@@ -31,24 +31,32 @@
                 [ 'large'        ]
             ];
 
-            var rangeSum = CONFIG.reduce(function(memo, range) {
-                return memo + (range[WIDTH] || 0);
-            }, 0);
+            var maxWidth = Math.max.apply(Math, CONFIG.map(function(range) {
+                return range[WIDTH] || 0;
+            }));
 
-            var rangeAvg = rangeSum / CONFIG.length;
+            var deltas = CONFIG.map(function(range, index) {
+                return range[WIDTH] - (index > 0 ? CONFIG[index - 1][WIDTH] : 0);
+            }).slice(0, -1); // drop the last NaN
 
-            $('#current-class').append($.map(CONFIG, function(range) {
-                var width = ((range[WIDTH] || rangeAvg) * 100 / (rangeSum + rangeAvg)) + '%';
+            var sliceAvg = deltas.reduce(function(memo, width) {
+                return memo + width;
+            }, 0) / CONFIG.length;
+
+            $('#current-class').append(CONFIG.map(function(range, index) {
+                var width = ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg)) + '%';
                 return $('<li>').css({ width: width }).append(
                     $('<div>').text(range[WIDTH] ? range[WIDTH] + 'px' : ''),
-                    $('<div>').text(range[NAME])
+                    $('<div>').text('"' + range[NAME] + '"')
                 );
             }));
 
             var $widthCursor = $('#current-width > div');
 
             function updateCurrentWidth() {
-                $widthCursor.text(window.innerWidth + 'px').css({ left: (window.innerWidth * 100 / (rangeSum + rangeAvg)) + '%' });
+                $widthCursor
+                    .text(window.innerWidth + 'px')
+                    .css({ left: ((window.innerWidth + 2) * 100 / (maxWidth + sliceAvg)) + '%' }); // 2 compensates for "pegs" in the visu
             }
 
             window.onresize = updateCurrentWidth;
