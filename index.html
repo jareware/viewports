@@ -11,11 +11,25 @@
     <h1>viewports.scss</h1>
     <p>Resize your browser to see how matches change.</p>
 
-    <h2>Current matching range</h2>
+    <h2>Currently matching range</h2>
     <div id="current-range-cursor">
         <div><!-- this is the moving part --></div>
     </div>
     <ul id="current-range-list"></ul>
+
+    <h2>Query type match table</h2>
+    <table id="match-table">
+        <thead>
+            <tr>
+                <th>
+                    <!-- cells will be populated with JS -->
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- rows will be populated with JS -->
+        </tbody>
+    </table>
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
@@ -29,6 +43,14 @@
                 [ 'small',   768 ],
                 [ 'medium', 1024 ],
                 [ 'large'        ]
+            ];
+            var QUERY_TYPES = [
+                'below',
+                'up-to',
+                'among',
+                'up-from',
+                'above',
+                'not'
             ];
 
             // Calculations for fun & profit:
@@ -72,6 +94,23 @@
 
             window.onresize = updateCurrentWidth;
             updateCurrentWidth();
+
+            // Setting up the match-table:
+
+            $('#match-table thead tr').append(ranges.map(function(range) {
+                return $('<th>').text(range.readableName);
+            }));
+
+            $('#match-table tbody').append(QUERY_TYPES.map(function(queryType) {
+                return $('<tr>').addClass('query-' + queryType).append(
+                    $('<td>').text(queryType),
+                    ranges.map(function(range) {
+                        return $('<td>')
+                            .addClass('range-' + range.name)
+                            .text(queryType + ' ' + range.readableName);
+                    })
+                );
+            }));
 
         });
     </script>

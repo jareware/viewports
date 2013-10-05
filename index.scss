@@ -1,5 +1,7 @@
 @import "viewports";
 
+$QUERY_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
+
 $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
@@ -8,7 +10,7 @@ $liTopPad: 0px;
 $liBotPad: 50px;
 $arrowSize: 7px;
 $arrowColor: black;
-$visuWidth: 500px;
+$visuWidth: 640px;
 $cursorWidth: 100px;
 $cursorHeight: 30px;
 
@@ -115,6 +117,25 @@ ul#current-range-list {
         &:nth-child(4) {
             @include viewports('large') {
                 @include selected-1;
+            }
+        }
+    }
+}
+
+#match-table {
+    width: $visuWidth;
+
+    tbody tr {
+        @each $type in $QUERY_TYPES {
+            &.query-#{$type} {
+                @each $range in range-names() {
+                    td.range-#{$range} {
+                        color: transparent; // hide the match text by default
+                        @include viewports($type $range) {
+                            color: $textColor; // but show it when the range matches
+                        }
+                    }
+                }
             }
         }
     }

@@ -135,7 +135,7 @@ $_viewport_config:
 
 @mixin viewports($queryConfig) {
 
-    $DEBUG: true;
+    $DEBUG: false;
     $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
     $DEFAULT_TYPE: 'among';
 
