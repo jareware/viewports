@@ -30,12 +30,13 @@ body {
     color: $textColor;
 }
 
-#current-width {
+#current-range-cursor {
     width: $visuWidth;
     height: $cursorHeight;
     position: relative;
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     font-size: 14px;
+    overflow: hidden;
 
     > div { // cursor
         position: absolute;
@@ -59,7 +60,7 @@ body {
     }
 }
 
-ul#current-class {
+ul#current-range-list {
     margin: 0;
     padding: 0;
     overflow: hidden;

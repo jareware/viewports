@@ -9,13 +9,13 @@
 <body>
 
     <h1>viewports.scss</h1>
-    <p>This is a test page for the media queries provided.</p>
+    <p>Resize your browser to see how matches change.</p>
 
-    <h2>Configured viewport ranges</h2>
-    <div id="current-width">
-        <div id="width-cursor"></div>
+    <h2>Current matching range</h2>
+    <div id="current-range-cursor">
+        <div><!-- this is the moving part --></div>
     </div>
-    <ul id="current-class"></ul>
+    <ul id="current-range-list"></ul>
 
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
@@ -31,6 +31,8 @@
                 [ 'large'        ]
             ];
 
+            // Calculations for fun & profit:
+
             var maxWidth = Math.max.apply(Math, CONFIG.map(function(range) {
                 return range[WIDTH] || 0;
             }));
@@ -43,15 +45,24 @@
                 return memo + width;
             }, 0) / CONFIG.length;
 
-            $('#current-class').append(CONFIG.map(function(range, index) {
-                var width = ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg)) + '%';
-                return $('<li>').css({ width: width }).append(
-                    $('<div>').text(range[WIDTH] ? range[WIDTH] + 'px' : ''),
-                    $('<div>').text('"' + range[NAME] + '"')
+            var ranges = CONFIG.map(function(range, index) {
+                return {
+                    name:  range[NAME],  readableName:  '"' + range[NAME] + '"',
+                    width: range[WIDTH], readableWidth: range[WIDTH] ? range[WIDTH] + 'px' : '',
+                    percentDelta: ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg)) + '%'
+                };
+            });
+
+            // Setting up the current-match visualization:
+
+            $('#current-range-list').append(ranges.map(function(range) {
+                return $('<li>').css({ width: range.percentDelta }).append(
+                    $('<div>').text(range.readableWidth),
+                    $('<div>').text(range.readableName)
                 );
             }));
 
-            var $widthCursor = $('#current-width > div');
+            var $widthCursor = $('#current-range-cursor > div');
 
             function updateCurrentWidth() {
                 $widthCursor
