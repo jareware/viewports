@@ -54,7 +54,6 @@ $_viewport_config:
     @return $return;
 }
 
-
 // Returns a tuple representing the range in which the given $namedRange applies.
 // For ranges that are unbound at either end, returns <false> for that end.
 //
@@ -129,6 +128,18 @@ $_viewport_config:
         } @else {
             $return: "#{$return}#{$glueString}#{nth($list, $i)}";
         }
+    }
+    @return $return;
+}
+
+// Returns the given list with the HEAD removed.
+//
+// @example rest-in-list((1 2 3)) => (2 3)
+//
+@function rest-in-list($list) {
+    $return: ();
+    @for $i from 2 to length($list) + 1 {
+        $return: join($return, nth($list, $i));
     }
     @return $return;
 }

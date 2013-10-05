@@ -1,0 +1,13 @@
+@import "../../viewports";
+
+/* it returns the contents of the list, excepting the first item */
+
+p {
+    content: rest-in-list(('foo' 'bar' 'baz'));
+}
+
+/* should equal */
+
+p {
+    content: "bar" "baz";
+}
