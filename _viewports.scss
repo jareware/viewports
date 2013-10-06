@@ -163,6 +163,13 @@ $_viewport_config:
 //
 @function resolve-query($queryType, $namedRanges) {
 
+    @if (length($namedRanges) < 1) {
+        @warn 'Expecting at least 1 range for query type <#{$queryType}>, got 0';
+        @return false;
+    }
+
+    @if (true) { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>)'; }
+
     @if ($queryType == 'among') {
 
         $return: ();
@@ -221,28 +228,26 @@ $_viewport_config:
     }
 }
 
+// TODO: Check for unnecessary ()'s
+
 @mixin viewports($queryConfig) {
 
     @if (validate-config()) {
 
-        $DEBUG: false;
+        $DEBUG: true;
         $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
         $DEFAULT_TYPE: 'among';
 
-        $queryType: nth($queryConfig, 1);
+        @if ($DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>)'; }
 
-        // TODO: join() -> append() ?
-
-        @if index($VALID_TYPES, $queryType) == false { // ensure valid query type always present
-            $queryConfig: join($DEFAULT_TYPE, $queryConfig);
-            $queryType: $DEFAULT_TYPE;
+        $resolved: null;
+        @if index($VALID_TYPES, nth($queryConfig, 1)) == false { // if first arg isn't a query type...
+            $resolved: resolve-query($DEFAULT_TYPE, $queryConfig); // ...use the default type, and treat all args as range names
+        } @else { // ...otherwise first arg is the type, and rest should be treated as range names
+            $resolved: resolve-query(nth($queryConfig, 1), rest-in-list($queryConfig));
         }
 
-        @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
-
-        $resolved: resolve-query($queryType, rest-in-list($queryConfig));
-
-        @if ($DEBUG) { @debug '@mixin viewports() resolved, $resolved: <#{$resolved}>'; }
+        @if ($DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>): resolved query to ranges <#{$resolved}>'; }
 
         @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
             @content;
