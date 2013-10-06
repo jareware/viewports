@@ -20,7 +20,7 @@ $_viewport_config:
 //
 @function validate-config() {
     @if (type_of(nth($_viewport_config, 1)) != 'list') {
-        @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that"?)';
+        @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that" specification?)';
         @return false;
     }
     $uppermostRangeFound: false;
@@ -35,7 +35,7 @@ $_viewport_config:
             @warn 'Invalid range specification format: <#{$row}>';
             @return false;
         } @else if ($isUppermostRange and $i == 1) {
-            @warn 'Found a "beyond-that" specification with no lower bound';
+            @warn 'Found a "beyond-that" specification with no lower bound (e.g. it can\'t come first)';
             @return false;
         } @else if ($isUppermostRange and $i != length($_viewport_config)) {
             @warn 'Found a misplaced "beyond-that" specification (it should always come last)';
@@ -95,7 +95,7 @@ $_viewport_config:
             }
         }
     }
-    @warn 'Invalid named range: #{$namedRange}';
+    @warn 'Unknown named range: <#{$namedRange}>';
     @return false, false;
 }
 
@@ -215,13 +215,11 @@ $_viewport_config:
                 @return append((), (nth($bounds, 2) + 1px, false));
             }
         } @else {
-            @warn 'Internal error: Unknown query type "#{$queryType}"';
+            @warn 'Internal error: Unknown query type <#{$queryType}>';
             @return false;
         }
     }
 }
-
-// TODO: Normalize @debug & @warn arg handling
 
 @mixin viewports($queryConfig) {
 
