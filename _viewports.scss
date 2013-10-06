@@ -54,9 +54,6 @@ $_viewport_config:
 // @return list
 //
 @function range-names() {
-    @if not validate-config() {
-        @return null;
-    }
     $return: ();
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
@@ -80,9 +77,6 @@ $_viewport_config:
 // @return list
 //
 @function bounds-for-range($namedRange) {
-    @if not validate-config() {
-        @return null;
-    }
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
         @if nth($row, 1) == 'up-to' { // standard range specification
@@ -102,6 +96,7 @@ $_viewport_config:
         }
     }
     @warn 'Invalid named range: #{$namedRange}';
+    @return false, false;
 }
 
 // Returns a media query expression for the given bounds.
@@ -122,7 +117,7 @@ $_viewport_config:
         }
     }
     @warn 'Invalid bounds for range: <#{$bounds}>';
-    @return '(max-width: -1px)'; // TODO: Always @return after @warn..?
+    @return '(max-width: -1px)'; // this is to keep the @return'ed value still syntactically valid
 }
 
 // Returns the given $list imploded into a string.
@@ -167,13 +162,10 @@ $_viewport_config:
 // @return list | boolean
 //
 @function resolve-query($queryType, $namedRanges) {
-    @if not validate-config() {
-        @return null; // TODO: Deprecate this in all the functions
-    }
-    $return: ();
 
     @if ($queryType == 'among') {
 
+        $return: ();
         @each $rangeName in $namedRanges { // this IS one of the named ranges -> include it
             $return: append($return, bounds-for-range($rangeName));
         }
@@ -181,6 +173,7 @@ $_viewport_config:
 
     } @else if ($queryType == 'not') {
 
+        $return: ();
         @each $rangeName in range-names() {
             @if index($namedRanges, $rangeName) == false { // this is NOT one of the named ranges -> include it
                 $return: append($return, bounds-for-range($rangeName));
@@ -228,40 +221,46 @@ $_viewport_config:
     }
 }
 
+// TODO: Normalize @debug & @warn arg handling
+
 @mixin viewports($queryConfig) {
 
-    $DEBUG: false;
-    $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
-    $DEFAULT_TYPE: 'among';
+    @if (validate-config()) {
 
-    $queryType: nth($queryConfig, 1);
+        $DEBUG: false;
+        $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
+        $DEFAULT_TYPE: 'among';
 
-    // TODO: join() -> append() ?
+        $queryType: nth($queryConfig, 1);
 
-    @if index($VALID_TYPES, $queryType) == false { // ensure valid query type always present
-        $queryConfig: join($DEFAULT_TYPE, $queryConfig);
-        $queryType: $DEFAULT_TYPE;
-    }
+        // TODO: join() -> append() ?
 
-    @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
-
-    $resolved: resolve-query($queryType, rest-in-list($queryConfig));
-
-    @if ($DEBUG) { @debug '@mixin viewports() resolved, $resolved: <#{$resolved}>'; }
-
-    @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
-        @content;
-    } @else if ($resolved == false) { // @content should NEVER apply (e.g. impossible range selection)
-        // nothing
-    } @else { // @content applies to specific ranges of viewports
-        $mediaQueryList: ();
-        @each $bounds in $resolved {
-            $mediaQueryList: append($mediaQueryList, media-query-for-bounds($bounds));
+        @if index($VALID_TYPES, $queryType) == false { // ensure valid query type always present
+            $queryConfig: join($DEFAULT_TYPE, $queryConfig);
+            $queryType: $DEFAULT_TYPE;
         }
-        $mediaQueryList: list-to-string($mediaQueryList, ', ');
-        @media #{$mediaQueryList} {
+
+        @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
+
+        $resolved: resolve-query($queryType, rest-in-list($queryConfig));
+
+        @if ($DEBUG) { @debug '@mixin viewports() resolved, $resolved: <#{$resolved}>'; }
+
+        @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
             @content;
+        } @else if ($resolved == false) { // @content should NEVER apply (e.g. impossible range selection)
+            // nothing
+        } @else { // @content applies to specific ranges of viewports
+            $mediaQueryList: ();
+            @each $bounds in $resolved {
+                $mediaQueryList: append($mediaQueryList, media-query-for-bounds($bounds));
+            }
+            $mediaQueryList: list-to-string($mediaQueryList, ', ');
+            @media #{$mediaQueryList} {
+                @content;
+            }
         }
+
     }
 
 }
