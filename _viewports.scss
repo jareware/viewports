@@ -23,7 +23,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 // @return boolean
 //
 @function validate-config() {
-    @if (type_of(nth($VIEWPORTS_CONFIG, 1)) != 'list') {
+    @if type_of(nth($VIEWPORTS_CONFIG, 1)) != 'list' {
         @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that" specification?)';
         @return false;
     }
@@ -32,21 +32,21 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
         $row: nth($VIEWPORTS_CONFIG, $i);
         $isStandardRange: length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is';
         $isUppermostRange: length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is';
-        @if ($isUppermostRange) {
+        @if $isUppermostRange {
             $uppermostRangeFound: true;
         }
-        @if (not $isStandardRange and not $isUppermostRange) {
+        @if not $isStandardRange and not $isUppermostRange {
             @warn 'Invalid range specification format: <#{$row}>';
             @return false;
-        } @else if ($isUppermostRange and $i == 1) {
+        } @else if $isUppermostRange and $i == 1 {
             @warn 'Found a "beyond-that" specification with no lower bound (e.g. it can\'t come first)';
             @return false;
-        } @else if ($isUppermostRange and $i != length($VIEWPORTS_CONFIG)) {
+        } @else if $isUppermostRange and $i != length($VIEWPORTS_CONFIG) {
             @warn 'Found a misplaced "beyond-that" specification (it should always come last)';
             @return false;
         }
     }
-    @if (not $uppermostRangeFound) {
+    @if not $uppermostRangeFound {
         @warn 'Missing a "beyond-that" specification';
         @return false;
     }
@@ -111,12 +111,12 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 // @return string
 //
 @function media-query-for-bounds($bounds) {
-    @if (length($bounds) == 2) {
-        @if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
+    @if length($bounds) == 2 {
+        @if nth($bounds, 1) != false and nth($bounds, 2) != false {
             @return '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
-        } @else if (nth($bounds, 1) == false and nth($bounds, 2) != false) {
+        } @else if nth($bounds, 1) == false and nth($bounds, 2) != false {
             @return '(max-width: #{nth($bounds, 2)})';
-        } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
+        } @else if nth($bounds, 1) != false and nth($bounds, 2) == false {
             @return '(min-width: #{nth($bounds, 1)})';
         }
     }
@@ -131,7 +131,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 @function list-to-string($list, $glueString: ', ') {
     $return: '';
     @for $i from 1 to length($list) + 1 {
-        @if ($i == 1) {
+        @if $i == 1 {
             $return: "#{nth($list, $i)}";
         } @else {
             $return: "#{$return}#{$glueString}#{nth($list, $i)}";
@@ -167,14 +167,14 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 //
 @function resolve-query($queryType, $namedRanges) {
 
-    @if (length($namedRanges) < 1) {
+    @if length($namedRanges) < 1 {
         @warn 'Expecting at least 1 range for query type <#{$queryType}>, got 0';
         @return false;
     }
 
-    @if ($VIEWPORTS_DEBUG) { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>)'; }
+    @if $VIEWPORTS_DEBUG { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>'; }
 
-    @if ($queryType == 'among') {
+    @if $queryType == 'among' {
 
         $return: ();
         @each $rangeName in $namedRanges { // this IS one of the named ranges -> include it
@@ -182,7 +182,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
         }
         @return $return;
 
-    } @else if ($queryType == 'not') {
+    } @else if $queryType == 'not' {
 
         $return: ();
         @each $rangeName in range-names() {
@@ -194,33 +194,33 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 
     } @else {
 
-        @if (length($namedRanges) != 1) {
+        @if length($namedRanges) != 1 {
             @warn 'Expecting a single range for query type <#{$queryType}>, got <#{$namedRanges}> instead';
             @return false;
         }
 
         $bounds: bounds-for-range(nth($namedRanges, 1));
 
-        @if ($queryType == 'up-to') {
-            @if (nth($bounds, 2) == false) {
+        @if $queryType == 'up-to' {
+            @if nth($bounds, 2) == false {
                 @return true; // range ALWAYS applies
             } @else {
                 @return append((), (false, nth($bounds, 2)));
             }
-        } @else if ($queryType == 'up-from') {
-            @if (nth($bounds, 1) == false) {
+        } @else if $queryType == 'up-from' {
+            @if nth($bounds, 1) == false {
                 @return true; // range ALWAYS applies
             } @else {
                 @return append((), (nth($bounds, 1), false));
             }
-        } @else if ($queryType == 'below') {
-            @if (nth($bounds, 1) == false) {
+        } @else if $queryType == 'below' {
+            @if nth($bounds, 1) == false {
                 @return false; // range NEVER applies
             } @else {
                 @return append((), (false, nth($bounds, 1) - 1px));
             }
-        } @else if ($queryType == 'above') {
-            @if (nth($bounds, 2) == false) {
+        } @else if $queryType == 'above' {
+            @if nth($bounds, 2) == false {
                 @return false; // range NEVER applies
             } @else {
                 @return append((), (nth($bounds, 2) + 1px, false));
@@ -232,11 +232,9 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
     }
 }
 
-// TODO: Check for unnecessary ()'s
-
 @mixin viewports($queryConfig) {
 
-    @if (validate-config()) {
+    @if validate-config() {
 
         $resolved: null;
         @if index($VIEWPORTS_QUERY_TYPES, nth($queryConfig, 1)) == false { // if first arg isn't a query type...
@@ -245,11 +243,11 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
             $resolved: resolve-query(nth($queryConfig, 1), rest-in-list($queryConfig));
         }
 
-        @if ($VIEWPORTS_DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>): resolved query to ranges <#{$resolved}>'; }
+        @if $VIEWPORTS_DEBUG { @debug '@mixin viewports(<#{$queryConfig}>: resolved query to ranges <#{$resolved}>'; }
 
-        @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
+        @if $resolved == true { // @content should ALWAYS apply (e.g. a range unbound at both ends
             @content;
-        } @else if ($resolved == false) { // @content should NEVER apply (e.g. impossible range selection)
+        } @else if $resolved == false { // @content should NEVER apply (e.g. impossible range selection
             // nothing
         } @else { // @content applies to specific ranges of viewports
             $mediaQueryList: ();
