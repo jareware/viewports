@@ -17,6 +17,14 @@
     </div>
     <ul id="current-range-list"></ul>
 
+    <div id="matching-ranges">
+        <div class="query-below"></div>
+        <div class="query-up-to"></div>
+        <div class="query-among"></div>
+        <div class="query-up-from"></div>
+        <div class="query-above"></div>
+    </div>
+
     <h2>Query type match table</h2>
     <table id="match-table">
         <thead>
@@ -71,14 +79,14 @@
                 return {
                     name:  range[NAME],  readableName:  '"' + range[NAME] + '"',
                     width: range[WIDTH], readableWidth: range[WIDTH] ? range[WIDTH] + 'px' : '',
-                    percentDelta: ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg)) + '%'
+                    percentDelta: ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg))
                 };
             });
 
             // Setting up the current-match visualization:
 
             $('#current-range-list').append(ranges.map(function(range) {
-                return $('<li>').css({ width: range.percentDelta }).append(
+                return $('<li>').width(range.percentDelta + '%').append(
                     $('<div>').text(range.readableWidth),
                     $('<div>').text(range.readableName)
                 );

@@ -1,7 +1,5 @@
 @import "viewports";
 
-$QUERY_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
-
 $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
@@ -10,9 +8,12 @@ $liTopPad: 0px;
 $liBotPad: 50px;
 $arrowSize: 7px;
 $arrowColor: black;
-$visuWidth: 640px;
+$visuWidth: 500px;
 $cursorWidth: 100px;
 $cursorHeight: 30px;
+$rangeMatchSpacing: 30px;
+
+$maxWidth: 1280px; // TODO: Calculate this
 
 * {
     -webkit-box-sizing: border-box;
@@ -40,14 +41,14 @@ body {
     font-size: 14px;
     overflow: hidden;
 
-    > div { // cursor
+    > div { // the moving part
         position: absolute;
         width: $cursorWidth;
         height: $cursorHeight;
         text-align: center;
         margin-left: $cursorWidth / -2;
 
-        &::after {
+        &::after { // the "pointer" triangle
             content: '';
             position: absolute;
             left: ($cursorWidth / 2) - $arrowSize;
@@ -62,7 +63,7 @@ body {
     }
 }
 
-ul#current-range-list {
+#current-range-list {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -122,16 +123,70 @@ ul#current-range-list {
     }
 }
 
+#matching-ranges {
+    margin-top: 20px;
+    width: $visuWidth;
+    position: relative;
+    height: $rangeMatchSpacing * 4;
+
+    > div {
+        position: absolute;
+        left: 0;
+        border: $borderWidth solid $borderColor;
+        border-top: 0px solid transparent;
+        height: $pegHeight;
+        padding-top: $pegHeight;
+        color: lighten($textColor, 50%);
+        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+        font-size: 10px;
+        white-space: nowrap;
+        transition-property: left width;
+        transition-duration: 500ms;
+        transition-timing-function: ease-out;
+    }
+
+    .query-up-to   { top: $rangeMatchSpacing * 0; }
+    .query-among   { top: $rangeMatchSpacing * 3; }
+    .query-up-from { top: $rangeMatchSpacing * 2; }
+    .query-below   { top: $rangeMatchSpacing * 1; }
+    .query-above   { top: $rangeMatchSpacing * 1; }
+
+    @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
+        @each $range in range-names() {
+            @include viewports($range) {
+                .query-#{$queryType} {
+                    $bounds: nth(resolve-query($queryType, $range), 1);
+                    @if $bounds == false { // query doesn't apply with this range -> hide range marker
+                        display: none;
+                    } @else if $bounds == true { // query always applies -> show 100%
+                        left: 0;
+                        width: 100%;
+                    } @else { // query applies over a specific range
+                        $left:  if(nth($bounds, 1), nth($bounds, 1), 0px);
+                        $width: if(nth($bounds, 2), nth($bounds, 2) - $left, $maxWidth - $left);
+                        width:  $width * 100% / $maxWidth;
+                        left:   $left * 100% / $maxWidth;
+                    }
+                    &::after {
+                        $title: if($queryType == 'among', '', $queryType + ' ');
+                        content: "@include viewports(#{$title}'#{$range}')";
+                    }
+                }
+            }
+        }
+    }
+}
+
 #match-table {
     width: $visuWidth;
 
     tbody tr {
-        @each $type in $QUERY_TYPES {
-            &.query-#{$type} {
+        @each $queryType in $VIEWPORTS_QUERY_TYPES {
+            &.query-#{$queryType} {
                 @each $range in range-names() {
                     td.range-#{$range} {
                         color: transparent; // hide the match text by default
-                        @include viewports($type $range) {
+                        @include viewports($queryType $range) {
                             color: $textColor; // but show it when the range matches
                         }
                     }
