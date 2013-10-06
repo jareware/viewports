@@ -19,6 +19,7 @@ $_viewport_config:
 // @return boolean
 //
 @function validate-config() {
+    // TODO: Assert presence of "beyond-that"
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
         $isStandardRange: length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is';
@@ -30,6 +31,7 @@ $_viewport_config:
             @warn 'Found a "beyond-that" specification with no lower bound';
             @return false;
         }
+        // TODO: Assert "beyond-that" being last
     }
     @return true;
 }
@@ -94,26 +96,20 @@ $_viewport_config:
 // @example [ 481px, 768px ] => "(min-width: 481px) and (max-width: 768px)"
 // @example [ 481px, false ] => "(min-width: 481px)"
 //
-// Returns a boolean value for the two special cases, that is, <true> for a
-// boundless range, and <false> for an impossible one:
-//
-// @example [ false, false ] => true
-// @example false => false
-//
-// @return string | boolean
+// @return string
 //
 @function media-query-for-bounds($bounds) {
-    @if ($bounds == false) {
-        @return false; // range is impossible, and NEVER applies
-    } @else if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
-        @return '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
-    } @else if (nth($bounds, 1) == false and nth($bounds, 2) != false) {
-        @return '(max-width: #{nth($bounds, 2)})';
-    } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
-        @return '(min-width: #{nth($bounds, 1)})';
-    } @else {
-        @return true; // range is unbound at both ends, and ALWAYS applies
+    @if (length($bounds) == 2) {
+        @if (nth($bounds, 1) != false and nth($bounds, 2) != false) {
+            @return '(min-width: #{nth($bounds, 1)}) and (max-width: #{nth($bounds, 2)})';
+        } @else if (nth($bounds, 1) == false and nth($bounds, 2) != false) {
+            @return '(max-width: #{nth($bounds, 2)})';
+        } @else if (nth($bounds, 1) != false and nth($bounds, 2) == false) {
+            @return '(min-width: #{nth($bounds, 1)})';
+        }
     }
+    @warn 'Invalid bounds for range: <#{$bounds}>';
+    @return '(max-width: -1px)'; // TODO: Always @return after @warn..?
 }
 
 // Returns the given $list imploded into a string.
@@ -132,16 +128,91 @@ $_viewport_config:
     @return $return;
 }
 
-// Returns the given list with the HEAD removed.
+// Returns the given list with the HEAD element removed.
 //
 // @example rest-in-list((1 2 3)) => (2 3)
 //
 @function rest-in-list($list) {
     $return: ();
     @for $i from 2 to length($list) + 1 {
-        $return: join($return, nth($list, $i));
+        $return: append($return, nth($list, $i));
     }
     @return $return;
+}
+
+// Returns the bounds corresponding to the given query & named range(s).
+//
+// @example "up-from", [ "small" ] => [[ 481px, false ]]
+// @example "not", [ "small" "medium" ] => [[ false, 480px ], [ 1025px, false ]]
+//
+// Returns a boolean value for the two special cases, that is, <true> for a
+// query that always applies, and <false> for one that never does:
+//
+// @example "below", [ "tiny" ] => false
+// @example "up-from", [ "tiny" ] => true
+//
+// @return list | boolean
+//
+@function resolve-query($queryType, $namedRanges) {
+    @if not validate-config() {
+        @return null; // TODO: Deprecate this in all the functions
+    }
+    $return: ();
+
+    @if ($queryType == 'among') {
+
+        @each $rangeName in $namedRanges { // this IS one of the named ranges -> include it
+            $return: append($return, bounds-for-range($rangeName));
+        }
+        @return $return;
+
+    } @else if ($queryType == 'not') {
+
+        @each $rangeName in range-names() {
+            @if index($namedRanges, $rangeName) == false { // this is NOT one of the named ranges -> include it
+                $return: append($return, bounds-for-range($rangeName));
+            }
+        }
+        @return $return;
+
+    } @else {
+
+        @if (length($namedRanges) != 1) {
+            @warn 'Expecting a single range for query type <#{$queryType}>, got <#{$namedRanges}> instead';
+            @return false;
+        }
+
+        $bounds: bounds-for-range(nth($namedRanges, 1));
+
+        @if ($queryType == 'up-to') {
+            @if (nth($bounds, 2) == false) {
+                @return true; // range ALWAYS applies
+            } @else {
+                @return append((), (false, nth($bounds, 2)));
+            }
+        } @else if ($queryType == 'up-from') {
+            @if (nth($bounds, 1) == false) {
+                @return true; // range ALWAYS applies
+            } @else {
+                @return append((), (nth($bounds, 1), false));
+            }
+        } @else if ($queryType == 'below') {
+            @if (nth($bounds, 1) == false) {
+                @return false; // range NEVER applies
+            } @else {
+                @return append((), (false, nth($bounds, 1) - 1px));
+            }
+        } @else if ($queryType == 'above') {
+            @if (nth($bounds, 2) == false) {
+                @return false; // range NEVER applies
+            } @else {
+                @return append((), (nth($bounds, 2) + 1px, false));
+            }
+        } @else {
+            @warn 'Internal error: Unknown query type "#{$queryType}"';
+            @return false;
+        }
+    }
 }
 
 @mixin viewports($queryConfig) {
@@ -152,6 +223,8 @@ $_viewport_config:
 
     $queryType: nth($queryConfig, 1);
 
+    // TODO: join() -> append() ?
+
     @if index($VALID_TYPES, $queryType) == false { // ensure valid query type always present
         $queryConfig: join($DEFAULT_TYPE, $queryConfig);
         $queryType: $DEFAULT_TYPE;
@@ -159,77 +232,19 @@ $_viewport_config:
 
     @if ($DEBUG) { @debug '@mixin viewports() called, $queryConfig: <#{$queryConfig}>'; }
 
-    $mediaQueryList: ();
+    $resolved: resolve-query($queryType, rest-in-list($queryConfig));
 
-    @if ($queryType == 'among') {
+    @if ($DEBUG) { @debug '@mixin viewports() resolved, $resolved: <#{$resolved}>'; }
 
-        @for $i from 2 to length($queryConfig) + 1 { // for each named range
-
-            $rangeName: nth($queryConfig, $i);
-            $bounds: bounds-for-range($rangeName);
-            $mediaQuery: media-query-for-bounds($bounds);
-            $mediaQueryList: append($mediaQueryList, $mediaQuery);
-
-            @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
-
-        }
-
-    } @else if ($queryType == 'not') {
-
-        @each $rangeName in range-names() {
-
-            @if index($queryConfig, $rangeName) == false {
-
-                $bounds: bounds-for-range($rangeName);
-                $mediaQuery: media-query-for-bounds($bounds);
-                $mediaQueryList: append($mediaQueryList, $mediaQuery);
-
-                @if ($DEBUG) { @debug '$rangeName: <#{$rangeName}>, $bounds: <#{$bounds}>, $mediaQuery: <#{$mediaQuery}>'; }
-
-            }
-
-        }
-
-    } @else {
-
-        @if (length($queryConfig) != 2) {
-            @warn 'For query type "#{$queryType}", only a single range should be named';
-        }
-
-        $rangeName: nth($queryConfig, 2);
-        $bounds: bounds-for-range($rangeName);
-
-        @if ($queryType == 'up-to') {
-            $bounds: join(false, nth($bounds, 2));
-        } @else if ($queryType == 'up-from') {
-            $bounds: join(nth($bounds, 1), false);
-        } @else if ($queryType == 'below') {
-            @if (nth($bounds, 1) == false) {
-                $bounds: false; // impossible range selected
-            } @else {
-                $bounds: join(false, nth($bounds, 1) - 1px);
-            }
-        } @else if ($queryType == 'above') {
-            @if (nth($bounds, 2) == false) {
-                $bounds: false; // impossible range selected
-            } @else {
-                $bounds: join(nth($bounds, 2) + 1px, false);
-            }
-        } @else {
-            @warn 'Internal error: Unknown query type "#{$queryType}"';
-        }
-
-        $mediaQueryList: media-query-for-bounds($bounds);
-
-        @if ($DEBUG) { @debug '$bounds: <#{$bounds}>, $mediaQueryList: <#{$mediaQueryList}>'; }
-
-    }
-
-    @if ($mediaQueryList == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
+    @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
         @content;
-    } @else if ($mediaQueryList == false) { // @content should NEVER apply (e.g. impossible range selection)
+    } @else if ($resolved == false) { // @content should NEVER apply (e.g. impossible range selection)
         // nothing
-    } @else {
+    } @else { // @content applies to specific ranges of viewports
+        $mediaQueryList: ();
+        @each $bounds in $resolved {
+            $mediaQueryList: append($mediaQueryList, media-query-for-bounds($bounds));
+        }
         $mediaQueryList: list-to-string($mediaQueryList, ', ');
         @media #{$mediaQueryList} {
             @content;
