@@ -1,4 +1,4 @@
-$_viewport_config:
+$VIEWPORTS_CONFIG:
     up-to  480px it-is "tiny",
     up-to  768px it-is "small",  // (portrait iPad width, for reference)
     up-to 1024px it-is "medium", // (landscape iPad width, for reference)
@@ -7,25 +7,29 @@ $_viewport_config:
 
 //    What this configuration means is:
 //
-//    0px         480px       768px       1024px      >9000px
+//    0px       480px       768px       1024px      >9000px
 //    \__________/\__________/\__________/\____________...
 //       "tiny"      "small"    "medium"      "large"
 //       <-480       481-768    769-1024       1025->
 
-// Returns a boolean value indicating if the current $_viewport_config is properly formatted.
+$VIEWPORTS_DEBUG: false !default;
+$VIEWPORTS_QUERY_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
+$VIEWPORTS_DEFAULT_QUERY: 'among';
+
+// Returns a boolean value indicating if the current $VIEWPORTS_CONFIG is properly formatted.
 //
 // Emits warnings accordingly, to help in debugging the config.
 //
 // @return boolean
 //
 @function validate-config() {
-    @if (type_of(nth($_viewport_config, 1)) != 'list') {
+    @if (type_of(nth($VIEWPORTS_CONFIG, 1)) != 'list') {
         @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that" specification?)';
         @return false;
     }
     $uppermostRangeFound: false;
-    @for $i from 1 to length($_viewport_config) + 1 { // for each config row
-        $row: nth($_viewport_config, $i);
+    @for $i from 1 to length($VIEWPORTS_CONFIG) + 1 { // for each config row
+        $row: nth($VIEWPORTS_CONFIG, $i);
         $isStandardRange: length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is';
         $isUppermostRange: length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is';
         @if ($isUppermostRange) {
@@ -37,7 +41,7 @@ $_viewport_config:
         } @else if ($isUppermostRange and $i == 1) {
             @warn 'Found a "beyond-that" specification with no lower bound (e.g. it can\'t come first)';
             @return false;
-        } @else if ($isUppermostRange and $i != length($_viewport_config)) {
+        } @else if ($isUppermostRange and $i != length($VIEWPORTS_CONFIG)) {
             @warn 'Found a misplaced "beyond-that" specification (it should always come last)';
             @return false;
         }
@@ -55,8 +59,8 @@ $_viewport_config:
 //
 @function range-names() {
     $return: ();
-    @for $i from 1 to length($_viewport_config) + 1 { // for each config row
-        $row: nth($_viewport_config, $i);
+    @for $i from 1 to length($VIEWPORTS_CONFIG) + 1 { // for each config row
+        $row: nth($VIEWPORTS_CONFIG, $i);
         @if nth($row, 1) == 'up-to' { // standard range specification
             $return: append($return, nth($row, 4));
         } @else if nth($row, 1) == 'beyond-that' { // uppermost range specification
@@ -77,12 +81,12 @@ $_viewport_config:
 // @return list
 //
 @function bounds-for-range($namedRange) {
-    @for $i from 1 to length($_viewport_config) + 1 { // for each config row
-        $row: nth($_viewport_config, $i);
+    @for $i from 1 to length($VIEWPORTS_CONFIG) + 1 { // for each config row
+        $row: nth($VIEWPORTS_CONFIG, $i);
         @if nth($row, 1) == 'up-to' { // standard range specification
             @if nth($row, 4) == $namedRange { // name matches
                 @if $i > 1 { // range with a lower neighbor
-                    $prevRow: nth($_viewport_config, $i - 1);
+                    $prevRow: nth($VIEWPORTS_CONFIG, $i - 1);
                     @return nth($prevRow, 2) + 1, nth($row, 2); // return with [lbound, ubound]
                 } @else { // lowest range (e.g. from 0)
                     @return false, nth($row, 2); // return with [false, ubound]
@@ -90,7 +94,7 @@ $_viewport_config:
             }
         } @else if nth($row, 1) == 'beyond-that' { // uppermost range specification
             @if nth($row, 3) == $namedRange { // name matches
-                $prevRow: nth($_viewport_config, $i - 1);
+                $prevRow: nth($VIEWPORTS_CONFIG, $i - 1);
                 @return nth($prevRow, 2) + 1, false; // return with [lbound, false]
             }
         }
@@ -168,7 +172,7 @@ $_viewport_config:
         @return false;
     }
 
-    @if (true) { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>)'; }
+    @if ($VIEWPORTS_DEBUG) { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>)'; }
 
     @if ($queryType == 'among') {
 
@@ -234,20 +238,14 @@ $_viewport_config:
 
     @if (validate-config()) {
 
-        $DEBUG: true;
-        $VALID_TYPES: 'up-to' 'up-from' 'below' 'above' 'among' 'not';
-        $DEFAULT_TYPE: 'among';
-
-        @if ($DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>)'; }
-
         $resolved: null;
-        @if index($VALID_TYPES, nth($queryConfig, 1)) == false { // if first arg isn't a query type...
-            $resolved: resolve-query($DEFAULT_TYPE, $queryConfig); // ...use the default type, and treat all args as range names
+        @if index($VIEWPORTS_QUERY_TYPES, nth($queryConfig, 1)) == false { // if first arg isn't a query type...
+            $resolved: resolve-query($VIEWPORTS_DEFAULT_QUERY, $queryConfig); // ...use the default type, and treat all args as range names
         } @else { // ...otherwise first arg is the type, and rest should be treated as range names
             $resolved: resolve-query(nth($queryConfig, 1), rest-in-list($queryConfig));
         }
 
-        @if ($DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>): resolved query to ranges <#{$resolved}>'; }
+        @if ($VIEWPORTS_DEBUG) { @debug '@mixin viewports(<#{$queryConfig}>): resolved query to ranges <#{$resolved}>'; }
 
         @if ($resolved == true) { // @content should ALWAYS apply (e.g. a range unbound at both ends)
             @content;
