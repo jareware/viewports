@@ -1,10 +1,12 @@
 $_viewport_config:
     up-to  480px it-is "tiny",
+    beyond-that  it-is "large",
     up-to  768px it-is "small";
+
 
 @import "../../viewports";
 
-/* it won't validate a config without a 'beyond-that' specification */
+/* it won't validate a config with a misplaced 'beyond-that' specification */
 
 p {
     content: "#{validate-config()}";

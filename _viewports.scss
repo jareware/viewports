@@ -19,19 +19,32 @@ $_viewport_config:
 // @return boolean
 //
 @function validate-config() {
-    // TODO: Assert presence of "beyond-that"
+    @if (type_of(nth($_viewport_config, 1)) != 'list') {
+        @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that"?)';
+        @return false;
+    }
+    $uppermostRangeFound: false;
     @for $i from 1 to length($_viewport_config) + 1 { // for each config row
         $row: nth($_viewport_config, $i);
         $isStandardRange: length($row) == 4 and nth($row, 1) == 'up-to' and nth($row, 3) == 'it-is';
         $isUppermostRange: length($row) == 3 and nth($row, 1) == 'beyond-that' and nth($row, 2) == 'it-is';
+        @if ($isUppermostRange) {
+            $uppermostRangeFound: true;
+        }
         @if (not $isStandardRange and not $isUppermostRange) {
-            @warn 'Invalid range specification format: #{$row}';
+            @warn 'Invalid range specification format: <#{$row}>';
             @return false;
         } @else if ($isUppermostRange and $i == 1) {
             @warn 'Found a "beyond-that" specification with no lower bound';
             @return false;
+        } @else if ($isUppermostRange and $i != length($_viewport_config)) {
+            @warn 'Found a misplaced "beyond-that" specification (it should always come last)';
+            @return false;
         }
-        // TODO: Assert "beyond-that" being last
+    }
+    @if (not $uppermostRangeFound) {
+        @warn 'Missing a "beyond-that" specification';
+        @return false;
     }
     @return true;
 }
