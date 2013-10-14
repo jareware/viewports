@@ -10,8 +10,10 @@
 
     <h1>viewports.scss</h1>
     <p>Resize your browser to see how matches change.</p>
+    <p>The current viewport is considered <span id="current-range-name"></span>.</p>
 
-    <h2>Currently matching range</h2>
+    <h2>Sample queries</h2>
+    <p>Below are the targettable ranges based on the current viewport:</p>
     <div id="current-range-cursor">
         <div><!-- this is the moving part --></div>
     </div>
@@ -25,7 +27,8 @@
         <div class="query-above"></div>
     </div>
 
-    <h2>Query type match table</h2>
+    <h2>Match table</h2>
+    <p>Below are listed all queries which would currently match:</p>
     <table id="match-table">
         <thead>
             <tr>

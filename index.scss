@@ -11,7 +11,7 @@ $arrowColor: black;
 $visuWidth: 500px;
 $cursorWidth: 100px;
 $cursorHeight: 30px;
-$rangeMatchSpacing: 30px;
+$rangeMatchSpacing: 35px;
 
 $maxWidth: 1280px; // TODO: Calculate this
 
@@ -31,6 +31,18 @@ body {
 @mixin selected-1 {
     background-color: lighten($borderColor, 30%);
     color: $textColor;
+}
+
+#current-range-name {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 14px;
+    &::after {
+        @each $range in range-names() {
+            @include viewports(among $range) {
+                content: "\"#{$range}\""
+            }
+        }
+    }
 }
 
 #current-range-cursor {
@@ -124,7 +136,6 @@ body {
 }
 
 #matching-ranges {
-    margin-top: 20px;
     width: $visuWidth;
     position: relative;
     height: $rangeMatchSpacing * 4;
@@ -145,17 +156,18 @@ body {
         transition-timing-function: ease-out;
     }
 
-    .query-up-to   { top: $rangeMatchSpacing * 0; }
-    .query-among   { top: $rangeMatchSpacing * 3; }
-    .query-up-from { top: $rangeMatchSpacing * 2; }
+    .query-among   { top: $rangeMatchSpacing * 0; }
     .query-below   { top: $rangeMatchSpacing * 1; }
     .query-above   { top: $rangeMatchSpacing * 1; }
+    .query-up-from { top: $rangeMatchSpacing * 2; }
+    .query-up-to   { top: $rangeMatchSpacing * 3; }
 
     @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
         @each $range in range-names() {
             @include viewports($range) {
                 .query-#{$queryType} {
                     $bounds: nth(resolve-query($queryType, $range), 1);
+                    color: black;
                     @if $bounds == false { // query doesn't apply with this range -> hide range marker
                         display: none;
                     } @else if $bounds == true { // query always applies -> show 100%
@@ -169,7 +181,7 @@ body {
                     }
                     &::after {
                         $title: if($queryType == 'among', '', $queryType + ' ');
-                        content: "@include viewports(#{$title}'#{$range}')";
+                        content: "@include viewports(#{$title}\"#{$range}\")";
                     }
                 }
             }
@@ -179,6 +191,25 @@ body {
 
 #match-table {
     width: $visuWidth;
+    border-collapse: collapse;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 11px;
+
+    td, th {
+        border: $borderWidth solid $borderColor;
+        text-align: center;
+
+        &:first-child {
+            border-left: none;
+            color: lighten($textColor, 50%);
+            text-align: right;
+        }
+    }
+    th {
+        border-top: none;
+        color: lighten($textColor, 50%);
+    }
+
 
     tbody tr {
         @each $queryType in $VIEWPORTS_QUERY_TYPES {
