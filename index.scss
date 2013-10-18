@@ -1,5 +1,6 @@
 @import "viewports";
 
+$bodyPadding: 8px;
 $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
@@ -27,6 +28,7 @@ body {
     font-size: 14px;
     line-height: 20px;
     color: #333333;
+    margin: $bodyPadding;
 }
 
 %monospace {
@@ -123,6 +125,37 @@ ul.range-scale {
     &.with-range-names.with-pixel-counts { // adjust range name positioning so it won't collapse with pixel counts when both present
         li::after {
             top: 10px;
+        }
+    }
+}
+
+.range-cursor {
+    @extend %monospace;
+    height: $cursorHeight;
+    position: relative;
+    overflow: hidden;
+    margin: 0 (-$bodyPadding);
+    left: $bodyPadding + $borderWidth/2;
+
+    > div { // the moving part
+        position: absolute;
+        left: $visuWidth / $scaleWidth * 100%;
+        width: $cursorWidth;
+        height: $cursorHeight;
+        text-align: center;
+        margin-left: $cursorWidth / -2;
+
+        &::after { // the "pointer" triangle
+            content: '';
+            position: absolute;
+            left: ($cursorWidth / 2) - $arrowSize;
+            bottom: -$arrowSize;
+            width: 0;
+            height: 0;
+            border-width: $arrowSize;
+            border-color: transparent;
+            border-style: solid;
+            border-top: $arrowSize solid $arrowColor;
         }
     }
 }

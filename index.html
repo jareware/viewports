@@ -22,5 +22,16 @@
         <li></li>
     </ul>
 
+    <script>
+        (function() {
+            var $widthCursor = window.document.querySelector('.range-cursor > div');
+            function updateCurrentWidth() {
+                $widthCursor.innerHTML = window.innerWidth + 'px';
+            }
+            window.onresize = updateCurrentWidth;
+            updateCurrentWidth();
+        })();
+    </script>
+
 </body>
 </html>
