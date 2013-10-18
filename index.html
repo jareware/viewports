@@ -10,121 +10,17 @@
 
     <h1>viewports.scss</h1>
     <p>Resize your browser to see how matches change.</p>
-    <p>The current viewport is considered <span id="current-range-name"></span>.</p>
 
-    <h2>Sample queries</h2>
-    <p>Below are the targettable ranges based on the current viewport:</p>
-    <div id="current-range-cursor">
-        <div><!-- this is the moving part --></div>
-    </div>
-    <ul id="current-range-list"></ul>
-
-    <div id="matching-ranges">
-        <div class="query-below"></div>
-        <div class="query-up-to"></div>
-        <div class="query-among"></div>
-        <div class="query-up-from"></div>
-        <div class="query-above"></div>
-    </div>
-
-    <h2>Match table</h2>
-    <p>Below are listed all queries which would currently match:</p>
-    <table id="match-table">
-        <thead>
-            <tr>
-                <th>
-                    <!-- cells will be populated with JS -->
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- rows will be populated with JS -->
-        </tbody>
-    </table>
-
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-
-    <script>
-        $(function() {
-
-            var NAME   = 0; // key to below table
-            var WIDTH  = 1; // key to below table
-            var CONFIG = [
-                [ 'tiny',    480 ],
-                [ 'small',   768 ],
-                [ 'medium', 1024 ],
-                [ 'large'        ]
-            ];
-            var QUERY_TYPES = [
-                'below',
-                'up-to',
-                'among',
-                'up-from',
-                'above',
-                'not'
-            ];
-
-            // Calculations for fun & profit:
-
-            var maxWidth = Math.max.apply(Math, CONFIG.map(function(range) {
-                return range[WIDTH] || 0;
-            }));
-
-            var deltas = CONFIG.map(function(range, index) {
-                return range[WIDTH] - (index > 0 ? CONFIG[index - 1][WIDTH] : 0);
-            }).slice(0, -1); // drop the last NaN
-
-            var sliceAvg = deltas.reduce(function(memo, width) {
-                return memo + width;
-            }, 0) / CONFIG.length;
-
-            var ranges = CONFIG.map(function(range, index) {
-                return {
-                    name:  range[NAME],  readableName:  '"' + range[NAME] + '"',
-                    width: range[WIDTH], readableWidth: range[WIDTH] ? range[WIDTH] + 'px' : '',
-                    percentDelta: ((deltas[index] || sliceAvg) * 100 / (maxWidth + sliceAvg))
-                };
-            });
-
-            // Setting up the current-match visualization:
-
-            $('#current-range-list').append(ranges.map(function(range) {
-                return $('<li>').width(range.percentDelta + '%').append(
-                    $('<div>').text(range.readableWidth),
-                    $('<div>').text(range.readableName)
-                );
-            }));
-
-            var $widthCursor = $('#current-range-cursor > div');
-
-            function updateCurrentWidth() {
-                $widthCursor
-                    .text(window.innerWidth + 'px')
-                    .css({ left: ((window.innerWidth + 2) * 100 / (maxWidth + sliceAvg)) + '%' }); // 2 compensates for "pegs" in the visu
-            }
-
-            window.onresize = updateCurrentWidth;
-            updateCurrentWidth();
-
-            // Setting up the match-table:
-
-            $('#match-table thead tr').append(ranges.map(function(range) {
-                return $('<th>').text(range.readableName);
-            }));
-
-            $('#match-table tbody').append(QUERY_TYPES.map(function(queryType) {
-                return $('<tr>').addClass('query-' + queryType).append(
-                    $('<td>').text(queryType),
-                    ranges.map(function(range) {
-                        return $('<td>')
-                            .addClass('range-' + range.name)
-                            .text(queryType + ' ' + range.readableName);
-                    })
-                );
-            }));
-
-        });
-    </script>
+    <h2>Current viewport</h2>
+    <p>The current viewport is considered <span class="current-range-name"></span>:</p>
+    <div class="range-cursor"><div></div></div>
+    <ul class="range-scale with-range-names with-pixel-counts">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 
 </body>
 </html>

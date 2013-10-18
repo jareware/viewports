@@ -13,7 +13,8 @@ $cursorWidth: 100px;
 $cursorHeight: 30px;
 $rangeMatchSpacing: 35px;
 
-$maxWidth: 1280px; // TODO: Calculate this
+$maxWidth: nth(bounds-for-range(nth(range-names(), length(range-names()))), 1);
+$scaleWidth: $maxWidth + $maxWidth / length(range-names());
 
 * {
     -webkit-box-sizing: border-box;
@@ -28,14 +29,14 @@ body {
     color: #333333;
 }
 
-@mixin selected-1 {
-    background-color: lighten($borderColor, 30%);
-    color: $textColor;
-}
-
-#current-range-name {
+%monospace {
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     font-size: 14px;
+}
+
+// Contains the name of the currently applying range
+.current-range-name {
+    @extend %monospace;
     &::after {
         @each $range in range-names() {
             @include viewports(among $range) {
@@ -45,37 +46,8 @@ body {
     }
 }
 
-#current-range-cursor {
-    width: $visuWidth;
-    height: $cursorHeight;
-    position: relative;
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-    font-size: 14px;
-    overflow: hidden;
-
-    > div { // the moving part
-        position: absolute;
-        width: $cursorWidth;
-        height: $cursorHeight;
-        text-align: center;
-        margin-left: $cursorWidth / -2;
-
-        &::after { // the "pointer" triangle
-            content: '';
-            position: absolute;
-            left: ($cursorWidth / 2) - $arrowSize;
-            bottom: -$arrowSize;
-            width: 0;
-            height: 0;
-            border-width: $arrowSize;
-            border-color: transparent;
-            border-style: solid;
-            border-top: $arrowSize solid $arrowColor;
-        }
-    }
-}
-
-#current-range-list {
+// Produces a vertical scale of defined ranges
+ul.range-scale {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -83,6 +55,7 @@ body {
     width: $visuWidth;
 
     li {
+        @extend %monospace;
         float: left;
         height: $pegHeight;
         list-style-type: none;
@@ -91,138 +64,65 @@ body {
         border-width: $borderWidth 0 0 $borderWidth;
         margin: $liTopPad 0 $liBotPad 0;
         padding: $pegHeight 0 0 0;
-        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-        font-size: 14px;
         text-align: center;
         color: lighten($textColor, 50%);
         position: relative;
+        display: none;
 
-        > div {
-
-            &:nth-child(1) {
-                position: absolute;
-                width: 100px;
-                right: -50px;
-                top: $pegHeight;
-                font-size: 10px;
-                color: lighten($textColor, 50%);
-            }
-            &:nth-child(2) {
-                margin-top: 20px;
-            }
+        &::before { // the "peg" with the pixel number
+            position: absolute;
+            width: 100px;
+            left: -50px;
+            top: $pegHeight;
+            font-size: 10px;
+        }
+        &::after { // the name of the range
+            color: black;
+            position: relative;
         }
 
-        &:nth-child(1) {
-            @include viewports('tiny') {
-                @include selected-1;
-            }
-        }
-        &:nth-child(2) {
-            @include viewports('small') {
-                @include selected-1;
-            }
-        }
-        &:nth-child(3) {
-            @include viewports('medium') {
-                @include selected-1;
-            }
-        }
-        &:nth-child(4) {
-            @include viewports('large') {
-                @include selected-1;
-            }
-        }
-    }
-}
+        @for $i from 1 to length(range-names()) + 1 { // use each successive <li> to show a range
+            $rangeName: nth(range-names(), $i);
 
-#matching-ranges {
-    width: $visuWidth;
-    position: relative;
-    height: $rangeMatchSpacing * 4;
+            &:nth-child(#{$i}) {
+                $bounds: bounds-for-range($rangeName);
+                $lbound: if(nth($bounds, 1) != false, nth($bounds, 1), 0);
+                $ubound: if(nth($bounds, 2) != false, nth($bounds, 2), $scaleWidth);
+                display: block;
+                width: ($ubound - $lbound) / $scaleWidth * 100%;
 
-    > div {
-        position: absolute;
-        left: 0;
-        border: $borderWidth solid $borderColor;
-        border-top: 0px solid transparent;
-        height: $pegHeight;
-        padding-top: $pegHeight;
-        color: lighten($textColor, 50%);
-        font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-        font-size: 10px;
-        white-space: nowrap;
-        transition-property: left width;
-        transition-duration: 500ms;
-        transition-timing-function: ease-out;
-    }
+                &::before { // the "peg" with the pixel number
+                    display: none;
+                    content: '#{if($lbound == 0, 0px, $lbound - 1px)}';
 
-    .query-among   { top: $rangeMatchSpacing * 0; }
-    .query-below   { top: $rangeMatchSpacing * 1; }
-    .query-above   { top: $rangeMatchSpacing * 1; }
-    .query-up-from { top: $rangeMatchSpacing * 2; }
-    .query-up-to   { top: $rangeMatchSpacing * 3; }
-
-    @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
-        @each $range in range-names() {
-            @include viewports($range) {
-                .query-#{$queryType} {
-                    $bounds: nth(resolve-query($queryType, $range), 1);
-                    color: black;
-                    @if $bounds == false { // query doesn't apply with this range -> hide range marker
-                        display: none;
-                    } @else if $bounds == true { // query always applies -> show 100%
+                    @if $i == 1 { // align the "0px" peg so it's visible
                         left: 0;
-                        width: 100%;
-                    } @else { // query applies over a specific range
-                        $left:  if(nth($bounds, 1), nth($bounds, 1), 0px);
-                        $width: if(nth($bounds, 2), nth($bounds, 2) - $left, $maxWidth - $left);
-                        width:  $width * 100% / $maxWidth;
-                        left:   $left * 100% / $maxWidth;
+                        text-align: left;
                     }
-                    &::after {
-                        $title: if($queryType == 'among', '', $queryType + ' ');
-                        content: "@include viewports(#{$title}\"#{$range}\")";
-                    }
+                }
+                &::after { // the name of the range
+                    display: none;
+                    content: '#{$rangeName}';
                 }
             }
         }
     }
-}
 
-#match-table {
-    width: $visuWidth;
-    border-collapse: collapse;
-    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-    font-size: 11px;
-
-    td, th {
-        border: $borderWidth solid $borderColor;
-        text-align: center;
-
-        &:first-child {
-            border-left: none;
-            color: lighten($textColor, 50%);
-            text-align: right;
+    &.with-range-names { // with this class, show range names
+        li::after {
+            display: block;
         }
     }
-    th {
-        border-top: none;
-        color: lighten($textColor, 50%);
+
+    &.with-pixel-counts { // with this class, show pixel counts
+        li::before {
+            display: block;
+        }
     }
 
-
-    tbody tr {
-        @each $queryType in $VIEWPORTS_QUERY_TYPES {
-            &.query-#{$queryType} {
-                @each $range in range-names() {
-                    td.range-#{$range} {
-                        color: transparent; // hide the match text by default
-                        @include viewports($queryType $range) {
-                            color: $textColor; // but show it when the range matches
-                        }
-                    }
-                }
-            }
+    &.with-range-names.with-pixel-counts { // adjust range name positioning so it won't collapse with pixel counts when both present
+        li::after {
+            top: 10px;
         }
     }
 }
