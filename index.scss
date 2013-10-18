@@ -1,3 +1,15 @@
+/**
+ * Oh, hello there!
+ *
+ * This file is needlessly complicated, mostly just because of me wanting to have fun with SASS & trying
+ * to implement ALL functionality of the demo page in just CSS.  Also, the page styles can be recompiled to
+ * reflect any legal $VIEWPORTS_CONFIG, and that also makes it a bit complex.  Anyway, just keep in mind:
+ *
+ * FOR THE LOVE OF GOD AND ALL THAT IS HOLY, DON'T TREAT THIS FILE AS A USAGE EXAMPLE.
+ *
+ * That is all. :)
+ */
+
 @import "viewports";
 
 $bodyPadding: 8px;
@@ -150,6 +162,13 @@ ul.range-scale {
     }
 }
 
+// Courtesy of https://coderwall.com/p/qac-og
+@mixin calc($property, $expression) {
+    #{$property}: -moz-calc(#{$expression});
+    #{$property}: -webkit-calc(#{$expression});
+    #{$property}: calc(#{$expression});
+}
+
 // Produces an arrow pointing to the currently matching range
 .range-cursor {
     @extend %monospace;
@@ -157,11 +176,10 @@ ul.range-scale {
     position: relative;
     overflow: hidden;
     margin: 0 (-$bodyPadding);
-    left: $bodyPadding + $borderWidth/2;
 
     > div { // the moving part
+        @include calc(left, '#{$visuWidth / $scaleWidth * 100%} + #{$bodyPadding}');
         position: absolute;
-        left: $visuWidth / $scaleWidth * 100%;
         width: $cursorWidth;
         height: $cursorHeight;
         text-align: center;
