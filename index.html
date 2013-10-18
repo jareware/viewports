@@ -9,17 +9,26 @@
 <body>
 
     <h1>viewports.scss</h1>
+
     <p>Resize your browser to see how matches change.</p>
 
     <h2>Current viewport</h2>
+
     <p>The current viewport is considered <span class="current-range-name"></span>:</p>
     <div class="range-cursor"><div></div></div>
     <ul class="range-scale with-range-names with-pixel-counts">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <h2>Sample queries</h2>
+
+    <h3>Simple named ranges</h3>
+    <p>Wrapping styles into <code>@include viewports(<span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-among"></li>
     </ul>
 
     <script>

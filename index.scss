@@ -6,13 +6,14 @@ $borderWidth: 2px;
 $borderColor: #aaa;
 $pegHeight: 10px;
 $liTopPad: 0px;
-$liBotPad: 50px;
+$liBotPad: 30px;
 $arrowSize: 7px;
 $arrowColor: black;
 $visuWidth: 500px;
 $cursorWidth: 100px;
 $cursorHeight: 30px;
 $rangeMatchSpacing: 35px;
+$rangeMatchColor: rgba(0,200,0,0.5);
 
 $maxWidth: nth(bounds-for-range(nth(range-names(), length(range-names()))), 1);
 $scaleWidth: $maxWidth + $maxWidth / length(range-names());
@@ -21,6 +22,7 @@ $scaleWidth: $maxWidth + $maxWidth / length(range-names());
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    white-space: nowrap; // this may seem brutal, but the page can't really change height during resizes
 }
 
 body {
@@ -29,6 +31,12 @@ body {
     line-height: 20px;
     color: #333333;
     margin: $bodyPadding;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 %monospace {
@@ -50,8 +58,6 @@ body {
 
 // Produces a vertical scale of defined ranges
 ul.range-scale {
-    margin: 0;
-    padding: 0;
     overflow: hidden;
     position: relative;
     width: $visuWidth;
@@ -70,6 +76,7 @@ ul.range-scale {
         color: lighten($textColor, 50%);
         position: relative;
         display: none;
+        z-index: 1;
 
         &::before { // the "peg" with the pixel number
             position: absolute;
@@ -156,6 +163,39 @@ ul.range-scale {
             border-color: transparent;
             border-style: solid;
             border-top: $arrowSize solid $arrowColor;
+        }
+    }
+}
+
+ul.match-list {
+    width: $visuWidth;
+    position: relative;
+    margin-top: -$liBotPad - $pegHeight;
+
+    li {
+        background: $rangeMatchColor;
+        position: absolute;
+        height: 10px;
+    }
+
+    @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
+        @each $range in range-names() {
+            @include viewports($range) {
+                .query-#{$queryType} {
+                    $bounds: nth(resolve-query($queryType, $range), 1);
+                    @if $bounds == false { // query doesn't apply with this range -> hide range marker
+                        display: none;
+                    } @else if $bounds == true { // query always applies -> show 100%
+                        left: 0;
+                        width: 100%;
+                    } @else { // query applies over a specific range
+                        $left:  if(nth($bounds, 1), nth($bounds, 1), 0px);
+                        $width: if(nth($bounds, 2), nth($bounds, 2) - $left, $scaleWidth - $left);
+                        width:  $width * 100% / $scaleWidth;
+                        left:   $left * 100% / $scaleWidth;
+                    }
+                }
+            }
         }
     }
 }
