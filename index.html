@@ -20,15 +20,60 @@
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
     </ul>
 
-    <h2>Sample queries</h2>
+    <h2>Query types</h2>
 
-    <h3>Simple named ranges</h3>
+    <h3>Simple</h3>
     <p>Wrapping styles into <code>@include viewports(<span class="current-range-name"></span>)</code> will match:</p>
-    <ul class="range-scale with-range-names">
+    <ul class="range-scale with-range-names with-current-highlighted">
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
     </ul>
     <ul class="match-list">
         <li class="query-among"></li>
+    </ul>
+
+    <h3>Below</h3>
+    <p>Wrapping styles into <code>@include viewports(below <span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names with-current-highlighted">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-below"></li>
+    </ul>
+
+    <h3>Up-to</h3>
+    <p>Wrapping styles into <code>@include viewports(up-to <span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names with-current-highlighted">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-up-to"></li>
+    </ul>
+
+    <h3>Up-from</h3>
+    <p>Wrapping styles into <code>@include viewports(up-from <span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names with-current-highlighted">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-up-from"></li>
+    </ul>
+
+    <h3>Above</h3>
+    <p>Wrapping styles into <code>@include viewports(above <span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names with-current-highlighted">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-above"></li>
+    </ul>
+
+    <h3>Not</h3>
+    <p>Wrapping styles into <code>@include viewports(not <span class="current-range-name"></span>)</code> will match:</p>
+    <ul class="range-scale with-range-names with-current-highlighted">
+        <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+    </ul>
+    <ul class="match-list">
+        <li class="query-not"></li>
     </ul>
 
     <script>

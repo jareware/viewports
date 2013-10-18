@@ -86,7 +86,6 @@ ul.range-scale {
             font-size: 10px;
         }
         &::after { // the name of the range
-            color: black;
             position: relative;
         }
 
@@ -132,6 +131,21 @@ ul.range-scale {
     &.with-range-names.with-pixel-counts { // adjust range name positioning so it won't collapse with pixel counts when both present
         li::after {
             top: 10px;
+            color: $textColor;
+        }
+    }
+
+    &.with-current-highlighted li {
+        @for $i from 1 to length(range-names()) + 1 {
+            $rangeName: nth(range-names(), $i);
+
+            @include viewports(among $rangeName) {
+                &:nth-child(#{$i}) {
+                    &::after {
+                        color: $textColor;
+                    }
+                }
+            }
         }
     }
 }
@@ -171,11 +185,12 @@ ul.match-list {
     width: $visuWidth;
     position: relative;
     margin-top: -$liBotPad - $pegHeight;
+    margin-bottom: $liBotPad + $pegHeight * 2;
 
     li {
         background: $rangeMatchColor;
         position: absolute;
-        height: 10px;
+        height: $pegHeight;
     }
 
     @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
