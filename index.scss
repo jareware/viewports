@@ -150,6 +150,7 @@ ul.range-scale {
     }
 }
 
+// Produces an arrow pointing to the currently matching range
 .range-cursor {
     @extend %monospace;
     height: $cursorHeight;
@@ -181,6 +182,7 @@ ul.range-scale {
     }
 }
 
+// Produces highlights for a preceding .range-scale, for the named query types
 ul.match-list {
     width: $visuWidth;
     position: relative;
@@ -193,11 +195,35 @@ ul.match-list {
         height: $pegHeight;
     }
 
+    // Query types that yield only 1 set of bounds can be combined
     @each $queryType in 'below' 'up-to' 'among' 'up-from' 'above' {
         @each $range in range-names() {
             @include viewports($range) {
                 .query-#{$queryType} {
                     $bounds: nth(resolve-query($queryType, $range), 1);
+                    @if $bounds == false { // query doesn't apply with this range -> hide range marker
+                        display: none;
+                    } @else if $bounds == true { // query always applies -> show 100%
+                        left: 0;
+                        width: 100%;
+                    } @else { // query applies over a specific range
+                        $left:  if(nth($bounds, 1), nth($bounds, 1), 0px);
+                        $width: if(nth($bounds, 2), nth($bounds, 2) - $left, $scaleWidth - $left);
+                        width:  $width * 100% / $scaleWidth;
+                        left:   $left * 100% / $scaleWidth;
+                    }
+                }
+            }
+        }
+    }
+
+    // "not" queries yield (potentially) more bound tuples, so we need to iterate through them
+    @each $range in range-names() {
+        @include viewports($range) {
+            $boundsList: resolve-query('not', $range);
+            @for $i from 1 to length($boundsList) + 1 {
+                .query-not:nth-child(#{$i}) {
+                    $bounds: nth($boundsList, $i);
                     @if $bounds == false { // query doesn't apply with this range -> hide range marker
                         display: none;
                     } @else if $bounds == true { // query always applies -> show 100%
