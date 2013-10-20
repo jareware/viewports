@@ -12,7 +12,6 @@
 
 @import "viewports";
 
-$bodyPadding: 8px;
 $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
@@ -34,7 +33,13 @@ $scaleWidth: $maxWidth + $maxWidth / length(range-names());
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    white-space: nowrap; // this may seem brutal, but the page can't really change height during resizes
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -42,7 +47,21 @@ body {
     font-size: 14px;
     line-height: 20px;
     color: #333333;
-    margin: $bodyPadding;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    left: 50%;
+    margin-left: -$visuWidth / 2;
+
+    @media (max-width: #{$visuWidth + 20px}) { // undo the centering for small-enough viewports
+        left: 10px;
+        margin-left: 0;
+    }
+}
+
+p {
+    width: $visuWidth;
 }
 
 h1 {
@@ -197,23 +216,15 @@ ul.range-scale {
     }
 }
 
-// Courtesy of https://coderwall.com/p/qac-og
-@mixin calc($property, $expression) {
-    #{$property}: -moz-calc(#{$expression});
-    #{$property}: -webkit-calc(#{$expression});
-    #{$property}: calc(#{$expression});
-}
-
 // Produces an arrow pointing to the currently matching range
 .range-cursor {
     @extend %monospace;
     height: $cursorHeight;
     position: relative;
     overflow: hidden;
-    margin: 0 (-$bodyPadding);
 
     > div { // the moving part
-        @include calc(left, '#{$visuWidth / $scaleWidth * 100%} + #{$bodyPadding}');
+        left: $visuWidth / $scaleWidth * 100%;
         position: absolute;
         width: $cursorWidth;
         height: $cursorHeight;
