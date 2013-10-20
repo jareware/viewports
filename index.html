@@ -10,16 +10,13 @@
 
     <h1>viewports.scss</h1>
 
-    <p>Resize your browser to see how matches change.</p>
-
-    <h2>Current viewport</h2>
-
-    <p>The current viewport is considered <span class="current-range-name"></span>:</p>
+    <p>The current viewport is considered <span class="current-range-name emphasized"></span>:</p>
     <div class="range-cursor"><div></div></div>
     <ul class="range-scale with-range-names with-pixel-counts">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
     </ul>
+    <p class="emphasized">Resize your browser to see how matches change.</p>
 
     <h2>Query types</h2>
 
@@ -28,7 +25,6 @@
         would apply, should you use <code>@include viewports()</code> with specific arguments.
     </p>
 
-    <h3>Simple</h3>
     <p><code>@include viewports(<span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
@@ -38,8 +34,7 @@
         <li class="query-among"></li>
     </ul>
 
-    <h3>Below</h3>
-    <p><code>@include viewports(below <span class="current-range-name"></span>)</code> will apply to ranges:</p>
+    <p><code>@include viewports(<span class="emphasized">below</span> <span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
@@ -48,8 +43,7 @@
         <li class="query-below"></li>
     </ul>
 
-    <h3>Up-to</h3>
-    <p><code>@include viewports(up-to <span class="current-range-name"></span>)</code> will apply to ranges:</p>
+    <p><code>@include viewports(<span class="emphasized">up-to</span> <span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
@@ -58,8 +52,7 @@
         <li class="query-up-to"></li>
     </ul>
 
-    <h3>Up-from</h3>
-    <p><code>@include viewports(up-from <span class="current-range-name"></span>)</code> will apply to ranges:</p>
+    <p><code>@include viewports(<span class="emphasized">up-from</span> <span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
@@ -68,8 +61,7 @@
         <li class="query-up-from"></li>
     </ul>
 
-    <h3>Above</h3>
-    <p><code>@include viewports(above <span class="current-range-name"></span>)</code> will apply to ranges:</p>
+    <p><code>@include viewports(<span class="emphasized">above</span> <span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
@@ -78,8 +70,7 @@
         <li class="query-above"></li>
     </ul>
 
-    <h3>Not</h3>
-    <p><code>@include viewports(not <span class="current-range-name"></span>)</code> will apply to ranges:</p>
+    <p><code>@include viewports(<span class="emphasized">not</span> <span class="current-range-name"></span>)</code> will apply to ranges:</p>
     <ul class="range-scale with-range-names with-current-highlighted">
         <!-- prepare for at most 10 defined ranges: -->
         <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>

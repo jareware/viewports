@@ -17,15 +17,15 @@ $textColor: #333333;
 $borderWidth: 2px;
 $borderColor: #aaa;
 $pegHeight: 10px;
-$liTopPad: 0px;
-$liBotPad: 30px;
+$liBotPad: 50px;
 $arrowSize: 7px;
 $arrowColor: black;
 $visuWidth: 500px;
 $cursorWidth: 100px;
 $cursorHeight: 30px;
 $rangeMatchSpacing: 35px;
-$rangeMatchColor: rgba(0,200,0,0.5);
+$highlightColor: #1AAFC4;
+$rangeMatchColor: transparentize($highlightColor, 0.65);
 
 $maxWidth: nth(bounds-for-range(nth(range-names(), length(range-names()))), 1);
 $scaleWidth: $maxWidth + $maxWidth / length(range-names());
@@ -45,6 +45,41 @@ body {
     margin: $bodyPadding;
 }
 
+h1 {
+    font-size: 50px;
+    font-weight: 200;
+    margin-bottom: 40px;
+}
+
+h1 + p {
+    margin-top: 60px; // let <h2> push its intro paragraph a bit
+}
+
+h2 {
+    margin: 60px 0 30px 0;
+    font-weight: 200;
+    font-size: 27px;
+}
+
+h2 + p {
+    margin-bottom: 50px; // let <h2> grab its intro paragraph a bit
+}
+
+.emphasized {
+    color: $highlightColor;
+    font-weight: bold;
+}
+
+p.emphasized {
+    border: 1px solid $highlightColor;
+    border-radius: 10px;
+    padding: 10px;
+    background: #3EBFD1;
+    background: lighten($highlightColor, 4%);
+    color: white;
+    font-weight: normal;
+}
+
 ul, li {
     margin: 0;
     padding: 0;
@@ -62,7 +97,7 @@ ul, li {
     &::after {
         @each $range in range-names() {
             @include viewports(among $range) {
-                content: "\"#{$range}\""
+                content: "#{$range}";
             }
         }
     }
@@ -82,7 +117,7 @@ ul.range-scale {
         border-style: solid;
         border-color: $borderColor;
         border-width: $borderWidth 0 0 $borderWidth;
-        margin: $liTopPad 0 $liBotPad 0;
+        margin: 0 0 $liBotPad 0;
         padding: $pegHeight 0 0 0;
         text-align: center;
         color: lighten($textColor, 50%);
