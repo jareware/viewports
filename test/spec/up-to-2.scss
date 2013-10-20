@@ -2,7 +2,7 @@
 
 /* it handles an "up-to" query to the highest range */
 
-@include viewports(up-to 'large') {
+@include viewports(up-to large) {
     p { color: red; }
 }
 

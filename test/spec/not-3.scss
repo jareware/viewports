@@ -2,7 +2,7 @@
 
 /* it handles a "not" query including the lowest range */
 
-@include viewports('not' 'tiny' 'medium') {
+@include viewports('not' tiny medium) {
     p { color: red; }
 }
 

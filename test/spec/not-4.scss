@@ -2,7 +2,7 @@
 
 /* it handles a "not" query including the highest range */
 
-@include viewports('not' 'small' 'large') {
+@include viewports('not' small large) {
     p { color: red; }
 }
 

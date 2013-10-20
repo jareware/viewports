@@ -2,7 +2,7 @@
 
 /* it handles a "up-from" query from the smallest range */
 
-@include viewports(up-from 'tiny') {
+@include viewports(up-from tiny) {
     p { color: red; }
 }
 

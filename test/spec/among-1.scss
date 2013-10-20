@@ -2,7 +2,7 @@
 
 /* it produces the most basic media query, naming a single range */
 
-@include viewports('small') {
+@include viewports(small) {
     p { color: red; }
 }
 

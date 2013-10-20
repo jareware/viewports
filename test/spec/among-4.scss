@@ -2,7 +2,7 @@
 
 /* it handles a simple "among" query */
 
-@include viewports(among 'small') {
+@include viewports(among small) {
     p { color: red; }
 }
 

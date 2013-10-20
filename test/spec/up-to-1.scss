@@ -2,7 +2,7 @@
 
 /* it handles a basic "up-to" query */
 
-@include viewports(up-to 'medium') {
+@include viewports(up-to medium) {
     p { color: red; }
 }
 

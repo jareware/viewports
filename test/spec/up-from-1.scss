@@ -2,7 +2,7 @@
 
 /* it handles a basic "up-from" query */
 
-@include viewports(up-from 'small') {
+@include viewports(up-from small) {
     p { color: red; }
 }
 

@@ -2,7 +2,7 @@
 
 /* it produces the correct media query for the highest range */
 
-@include viewports('large') {
+@include viewports(large) {
     p { color: red; }
 }
 

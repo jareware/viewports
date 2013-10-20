@@ -2,7 +2,7 @@
 
 /* it handles a basic "above" query */
 
-@include viewports(above 'small') {
+@include viewports(above small) {
     p { color: red; }
 }
 

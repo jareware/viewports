@@ -2,7 +2,7 @@
 
 /* it handles a "not" query for consecutive ranges */
 
-@include viewports('not' 'small' 'medium') {
+@include viewports('not' small medium) {
     p { color: red; }
 }
 

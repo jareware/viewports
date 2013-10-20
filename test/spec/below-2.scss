@@ -2,7 +2,7 @@
 
 /* it handles a "below" query naming the lowest range */
 
-@include viewports(below 'tiny') {
+@include viewports(below tiny) {
     p { color: red; }
 }
 

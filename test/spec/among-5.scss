@@ -2,7 +2,7 @@
 
 /* it handles an "among" query naming several ranges */
 
-@include viewports(among 'tiny' 'medium') {
+@include viewports(among tiny medium) {
     p { color: red; }
 }
 

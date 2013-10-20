@@ -2,7 +2,7 @@
 
 /* it handles a basic "below" query */
 
-@include viewports(below 'medium') {
+@include viewports(below medium) {
     p { color: red; }
 }
 

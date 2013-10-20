@@ -2,7 +2,7 @@
 
 /* it produces the correct media query for the lowest range */
 
-@include viewports('tiny') {
+@include viewports(tiny) {
     p { color: red; }
 }
 

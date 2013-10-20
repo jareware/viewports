@@ -1,7 +1,7 @@
 $VIEWPORTS_CONFIG:
     up-to  480px it-is "tiny",
-    up-to  768px it-is "small",  // (portrait iPad width, for reference)
-    up-to 1024px it-is "medium", // (landscape iPad width, for reference)
+    up-to  768px it-is "small",
+    up-to 1024px it-is "medium",
     beyond-that  it-is "large"
     !default;
 
