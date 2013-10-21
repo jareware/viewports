@@ -51,6 +51,8 @@ The library is contained in a single `_viewports.scss` file, which is the only t
 
 TODO
 
+The only dependency is `sass >= 3.2.5`, which you can install with - you guessed it - `$ gem install sass`.
+
 ## Configuration
 
 To set up your viewports, you must define the `$VIEWPORTS_CONFIG` variable, with a cutesy little english-like syntax, for example:
@@ -129,3 +131,7 @@ This file can be compiled on its own, and executing `$ sass test/spec/above-1.sc
     color: red; } }
 ```
 The test runner simply does this for all spec files, makes the part following `/* it ` the name of the test case, and compares the parts separated by `/* should equal */`.
+
+## License
+
+http://opensource.org/licenses/MIT
