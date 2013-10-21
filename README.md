@@ -44,3 +44,37 @@ Or use simple operators to specify the ranges:
 @include viewports(up-to medium) { /* ... */ }
 ```
 That's it!
+
+## Installation
+
+The library is contained in a single `_viewports.scss` file, which is the only thing you need to include into your project.  To obtain a copy:
+
+TODO
+
+## Configuration
+
+To set up your viewports, you must define the `$VIEWPORTS_CONFIG` variable, with a cutesy little english-like syntax, for example:
+```scss
+$VIEWPORTS_CONFIG:
+    up-to  600px it-is "stacked",
+    up-to  750px it-is "fluid-1",
+    up-to 1000px it-is "fluid-2",
+    beyond-that  it-is "static";
+```
+The pixel amounts (also known as *breakpoints*) and quoted names are yours to choose.  If you want to, you can omit this and just `@import "viewports";`.  That will leave you with sensible default viewport ranges, but you really should pick ones that make sense for your project.  There's a few more bits about that below.
+
+Importing the library depends a bit on your installation method, but it's just the path that varies, for example:
+
+TODO
+
+## Picking a range config
+
+One simple option, as demonstrated by the [above example](#configuration), is to name each of your major layout modes.  A common scheme in responsive layouts is to split them into:
+
+  * a **stacked** layout, that caters to small-screen devices that can't afford to display things side-by-side at all
+  * a **fluid** layout, that takes up 100% of the available horizontal space on the device
+  * a **static** layout, that has a fixed width, so it doesn't look ridiculous on huge desktop displays
+
+You'll note the "fluid" range has been split into two, as it's common to have to shift things around a bit as your fluid layout gains more space.  You can still target all "fluid" ranges with `@include viewports(fluid-1 fluid-2)`.
+
+Another fine option, as demonstrated by the [first example](#quick-demo), is to look at all the devices you want to target, throw them into a few categories based on their viewport sizes, and give the categories some simple names (from "tiny" to "large", for example).
