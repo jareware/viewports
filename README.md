@@ -92,3 +92,40 @@ The library declares a single SASS mixin, which can be invoked in a few ways:
  * `@include viewports('not' small large)`: Listing one or more range names after the `not` operator produces a media query that applies whenever the viewport size is *not* within any of the listed ranges.  Note that since "not" is a reserved word in SASS, this operator needs to be quoted.
 
 The [interactive demo](#todo) hopefully makes these quite clear.
+
+## Test suite
+
+To make sure it generates exactly the desired CSS output and nothing else, `_viewports.scss` ships with a good coverage of unit tests, which you can run by going:
+```bash
+$ git clone TODO
+$ npm install
+$ npm test
+```
+Unit testing SASS is surprisingly simple; the test cases are regular SASS files under `test/spec/`, and look something like this:
+```scss
+@import "../../viewports";
+
+/* it handles a basic "above" query */
+
+@include viewports(above small) {
+    p { color: red; }
+}
+
+/* should equal */
+
+@media (min-width: 769px) {
+    p { color: red; }
+}
+```
+This file can be compiled on its own, and executing `$ sass test/spec/above-1.scss` produces the following CSS output:
+```css
+/* it handles a basic "above" query */
+@media (min-width: 769px) {
+  p {
+    color: red; } }
+/* should equal */
+@media (min-width: 769px) {
+  p {
+    color: red; } }
+```
+The test runner simply does this for all spec files, makes the part following `/* it ` the name of the test case, and compares the parts separated by `/* should equal */`.
