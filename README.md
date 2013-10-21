@@ -1,10 +1,10 @@
 # viewports.scss
 
-`viewports.scss` is a SASS microlibrary that makes it easier to manage media queries in complex responsive layouts.  It does this by allowing you to assign specific styles to named ranges of viewports, instead of repeating `@media` blocks and pixel counts all over.
+`viewports.scss` is a SASS microlibrary that makes it easier to manage media queries in responsive layouts.  It does this by allowing you to assign specific styles to named ranges of viewports, instead of repeating `@media` blocks and pixel counts all over.
 
 ## Quick demo
 
-Yet-another github page, and I have about 10 seconds to pitch this before you close the tab.  So here's the beef:
+Yet-another github page, and about 10 seconds to pitch this before you close the tab.  So here's the beef:
 
 ```scss
 // Define what ranges you want and what they're called:
@@ -23,6 +23,12 @@ Then, instead of writing:
     font-size: 150%;
 }
 ```
+Or, the more maintainable but even longer SASS variant:
+```css
+@media (min-width: #{$smallBreakpoint + 1}) and (max-width: #{$mediumBreakpoint}) {
+    font-size: 150%;
+}
+```
 You can write:
 ```scss
 @include viewports(medium) {
@@ -37,3 +43,4 @@ Or use simple operators to specify the ranges:
 ```scss
 @include viewports(up-to medium) { /* ... */ }
 ```
+That's it!
