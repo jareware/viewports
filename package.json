@@ -1,14 +1,17 @@
 {
-  "name": "viewports.scss",
-  "version": "0.1.0",
-  "description": "A simple @media query generator for SASS/Compass",
-  "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500"
-  },
-  "repository": "",
-  "author": "Jarno Rantanen <jarno@jrw.fi>",
-  "license": "MIT",
-  "dependencies": {
-    "mocha": "~1.8.2"
-  }
+    "name": "viewports",
+    "version": "0.5.0",
+    "description": "_viewports.scss is a SASS microlibrary that makes it easier to manage media queries in responsive layouts",
+    "scripts": {
+        "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jareware/viewports.git"
+    },
+    "author": "Jarno Rantanen <jarno@jrw.fi>",
+    "license": "MIT",
+    "dependencies": {
+        "mocha": "~1.8.2"
+    }
 }
