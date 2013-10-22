@@ -134,9 +134,11 @@ The test runner simply does this for all spec files, makes the part following `/
 
 ## And finally
 
+A friendly reminder:
+
 ![bill](bill.jpg)
 
-*For responsive times... make it __viewports__ time*
+*For responsive times... make it __viewports__ time.*
 
 ## License
 
