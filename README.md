@@ -47,9 +47,9 @@ That's it!  There's also an [interactive demo](http://jrw.fi/viewports/) of how 
 
 ## Installation
 
-The library is contained in a single `_viewports.scss` file, which is the only thing you need to include into your project.  To obtain a copy:
+The library is contained in a single `_viewports.scss` file, which is the only thing you need to include into your project.
 
-TODO
+ * The cure-for-impatience method is to just download the [main file](https://raw.github.com/jareware/viewports/master/_viewports.scss) and drop it somewhere you can `@import` it from.  That's it, ready to roll.
 
 The only dependency is `sass >= 3.2.5`, which you can install with - you guessed it - `$ gem install sass`.
 
@@ -67,7 +67,7 @@ The pixel amounts (also known as *breakpoints*) and quoted names are yours to ch
 
 Importing the library depends a bit on your installation method, but it's just the path that varies, for example:
 
-TODO
+ * `@import "viewports";` if you just dropped the file to the same directory with your main SCSS file(s).
 
 ## Picking a range config
 
