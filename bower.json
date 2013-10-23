@@ -1,0 +1,24 @@
+{
+  "name": "viewports",
+  "version": "0.5.0",
+  "homepage": "https://github.com/jareware/viewports",
+  "authors": [
+    "Jarno Rantanen <jarno@jrw.fi>"
+  ],
+  "description": "_viewports.scss is a SASS microlibrary that makes it easier to manage media queries in responsive layouts",
+  "main": "_viewports.scss",
+  "keywords": [
+    "SASS",
+    "SCSS",
+    "media query",
+    "responsive"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
