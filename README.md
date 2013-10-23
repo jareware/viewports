@@ -50,6 +50,7 @@ That's it!  There's also an [interactive demo](http://jrw.fi/viewports/) of how 
 The library is contained in a single `_viewports.scss` file, which is the only thing you need to include into your project.
 
  * The cure-for-impatience method is to just download the [main file](https://raw.github.com/jareware/viewports/master/_viewports.scss) and drop it somewhere you can `@import` it from.  That's it, ready to roll.
+ * A nicer option is to use [Bower](http://bower.io/) to manage your frontend-related dependencies. `$ bower install viewports` will set the library up at `./bower_components/viewports/`.  To start tracking the dependencies as well (highly recommended), go `$ bower init; bower install viewports --save`.
 
 The only dependency is `sass >= 3.2.5`, which you can install with - you guessed it - `$ gem install sass`.
 
@@ -68,6 +69,7 @@ The pixel amounts (also known as *breakpoints*) and quoted names are yours to ch
 Importing the library depends a bit on your installation method, but it's just the path that varies, for example:
 
  * `@import "viewports";` if you just dropped the file to the same directory with your main SCSS file(s).
+ * `@import "../bower_components/viewports/viewports";` if you installed via [Bower](http://bower.io/) (though the exact number of `..` may vary depending on your project setup; you'll figure it out).
 
 ## Picking a range config
 
