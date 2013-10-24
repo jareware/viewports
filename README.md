@@ -136,8 +136,6 @@ The test runner simply does this for all spec files, makes the part following `/
 
 ## And finally
 
-A friendly reminder:
-
 ![bill](bill.jpg)
 
 *For responsive times... make it __viewports__ time.*
@@ -145,5 +143,7 @@ A friendly reminder:
 ## License
 
 http://opensource.org/licenses/MIT
+
+Hand-crafted with löve by [@jareware](https://twitter.com/jareware) / [jrw.fi](http://jrw.fi/).
 
 ![GA](https://ssl.google-analytics.com/__utm.gif?utmwv=5.4.3&utmn=20129&utmhn=github.com&utmdt=viewports&utmr=-&utmp=%2Fjareware%2Fviewports&utmac=UA-42176157-4&utmcc=__utma%3D1.1828258468.1374783534.1374783534.1374783534.1%3B%2B__utmz%3D1.1374783534.1.1.utmcsr%3D(direct\)%7Cutmccn%3D(direct\)%7Cutmcmd%3D(none\)%3B)
