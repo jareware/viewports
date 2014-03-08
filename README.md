@@ -43,7 +43,7 @@ Or use simple operators to specify the ranges:
 ```scss
 @include viewports(up-to medium) { /* ... */ }
 ```
-That's it!  There's also an [interactive demo](http://jrw.fi/viewports/) of how the library works.
+That's it!  There's also an [interactive demo](http://jrw.fi/viewports/) of how the library works.  During development, you can set `$VIEWPORTS_DEBUG: true;` to see the currently active range directly in your page (there's an example in the top-left corner of the demo).
 
 ## Installation
 
