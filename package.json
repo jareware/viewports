@@ -3,7 +3,8 @@
     "version": "0.5.0",
     "description": "_viewports.scss is a SASS microlibrary that makes it easier to manage media queries in responsive layouts",
     "scripts": {
-        "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500"
+        "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500",
+        "release-demo": "git stash; rm index.css; sass index.scss > index-temp.css; cp index.html index-temp.html; git checkout gh-pages; mv index-temp.css index.css; mv index-temp.html index.html; git commit -a -m 'Update live demo from master.'"
     },
     "repository": {
         "type": "git",
