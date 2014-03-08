@@ -9,6 +9,31 @@
  *
  * That is all. :)
  */
+body::after {
+  position: fixed;
+  z-index: 9001;
+  top: 0;
+  left: 0;
+  margin: 10px;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid black;
+  color: black;
+  font-family: Monaco, "Liberation Mono", Courier, monospace;
+  font-size: 12px; }
+  @media (max-width: 480px) {
+    body::after {
+      content: "viewport: tiny (1/4)"; } }
+  @media (min-width: 481px) and (max-width: 768px) {
+    body::after {
+      content: "viewport: small (2/4)"; } }
+  @media (min-width: 769px) and (max-width: 1024px) {
+    body::after {
+      content: "viewport: medium (3/4)"; } }
+  @media (min-width: 1025px) {
+    body::after {
+      content: "viewport: large (4/4)"; } }
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -72,6 +97,41 @@ ul, li {
   margin: 0;
   padding: 0;
   list-style: none; }
+
+.instruction-downsize,
+.instruction-resize {
+  display: none; }
+
+@media (max-width: 1024px) {
+  .instruction-resize {
+    display: inline; } }
+@media (min-width: 1025px) {
+  .instruction-downsize {
+    display: inline; } }
+.debug-info-explanation {
+  position: fixed;
+  top: 60px;
+  left: 0px;
+  margin: 10px;
+  padding: 10px 12px;
+  color: black;
+  font-size: 12px;
+  background: lightgray;
+  width: 210px;
+  opacity: 0.75;
+  text-align: justify;
+  transition: opacity linear 1s; }
+  .debug-info-explanation::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    border: 10px solid transparent;
+    border-bottom: 10px solid lightgray; }
+  @media (max-width: 950px) {
+    .debug-info-explanation {
+      opacity: 0.15; } }
 
 .current-range-name, ul.range-scale li, .range-cursor {
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
