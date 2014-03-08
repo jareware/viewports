@@ -25,7 +25,7 @@ Then, instead of writing:
 ```
 Or, the more maintainable but even longer SASS variant:
 ```css
-@media (min-width: #{$smallBreakpoint + 1}) and (max-width: #{$mediumBreakpoint}) {
+@media (min-width: #{$smallBreakpoint + 1px}) and (max-width: #{$mediumBreakpoint}) {
     font-size: 150%;
 }
 ```
