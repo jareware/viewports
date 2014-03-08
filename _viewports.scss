@@ -245,9 +245,9 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 
         @if $VIEWPORTS_DEBUG { @debug '@mixin viewports(<#{$queryConfig}>: resolved query to ranges <#{$resolved}>'; }
 
-        @if $resolved == true { // @content should ALWAYS apply (e.g. a range unbound at both ends
+        @if $resolved == true { // @content should ALWAYS apply (e.g. a range unbound at both ends)
             @content;
-        } @else if $resolved == false { // @content should NEVER apply (e.g. impossible range selection
+        } @else if $resolved == false { // @content should NEVER apply (e.g. impossible range selection)
             // nothing
         } @else { // @content applies to specific ranges of viewports
             $mediaQueryList: ();
