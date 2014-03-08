@@ -10,6 +10,8 @@
  * That is all. :)
  */
 
+$VIEWPORTS_DEBUG: true;
+
 @import "viewports";
 
 $textColor: #333333;
@@ -117,6 +119,35 @@ ul, li {
 @media (min-width: $maxWidth) {
     .instruction-downsize {
         display: inline;
+    }
+}
+
+.debug-info-explanation {
+    position: fixed;
+    top: 60px;
+    left: 0px;
+    margin: 10px;
+    padding: 10px 12px;
+    color: black;
+    font-size: 12px;
+    background: lightgray;
+    width: 210px;
+    opacity: 0.75;
+    text-align: justify;
+    transition: opacity linear 1s;
+
+    &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: -20px;
+        left: 20px;
+        border: 10px solid transparent;
+        border-bottom: 10px solid lightgray;
+    }
+
+    @media (max-width: 950px) {
+        opacity: 0.15; // hide the info-box so it's not in the way of the main docs
     }
 }
 
