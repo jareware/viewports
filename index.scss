@@ -105,6 +105,21 @@ ul, li {
     list-style: none;
 }
 
+.instruction-downsize,
+.instruction-resize {
+    display: none;
+}
+@media (max-width: $maxWidth - 1px) {
+    .instruction-resize {
+        display: inline;
+    }
+}
+@media (min-width: $maxWidth) {
+    .instruction-downsize {
+        display: inline;
+    }
+}
+
 %monospace {
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     font-size: 14px;
