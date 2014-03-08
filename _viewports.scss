@@ -263,3 +263,33 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
     }
 
 }
+
+// When enabled, output CSS that displays the current viewport size in the top-left corner of <body>
+@if $VIEWPORTS_DEBUG {
+
+    body::after {
+        position: fixed;
+        z-index: 9001; // it's over nine thousand
+        top: 0;
+        left: 0;
+        margin: 10px;
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid black;
+        color: black;
+        font-family: Monaco, "Liberation Mono", Courier, monospace;
+        font-size: 12px;
+
+        @if validate-config() {
+            $rangeNames: range-names();
+            @for $i from 1 to length($rangeNames) + 1 {
+                @include viewports(among nth($rangeNames, $i)) {
+                    content: "viewport: #{nth($rangeNames, $i)} (#{$i}/#{length($rangeNames)})";
+                }
+            }
+        } @else {
+            content: 'Invalid $VIEWPORTS_CONFIG (see sass output)';
+            color: red;
+        }
+    }
+}
