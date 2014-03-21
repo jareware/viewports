@@ -23,7 +23,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 // @return boolean
 //
 @function validate-config() {
-    @if type_of(nth($VIEWPORTS_CONFIG, 1)) != 'list' {
+    @if type-of(nth($VIEWPORTS_CONFIG, 1)) != 'list' {
         @warn 'Malformed config (do you have at least one "up-to" and a "beyond-that" specification?)';
         @return false;
     }
@@ -35,7 +35,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
         @if $isUppermostRange {
             $uppermostRangeFound: true;
         }
-        @if not $isStandardRange and not $isUppermostRange {
+        @if not($isStandardRange) and not($isUppermostRange) {
             @warn 'Invalid range specification format: <#{$row}>';
             @return false;
         } @else if $isUppermostRange and $i == 1 {
@@ -46,7 +46,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
             @return false;
         }
     }
-    @if not $uppermostRangeFound {
+    @if not($uppermostRangeFound) {
         @warn 'Missing a "beyond-that" specification';
         @return false;
     }
@@ -171,8 +171,6 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
         @warn 'Expecting at least 1 range for query type <#{$queryType}>, got 0';
         @return false;
     }
-
-    @if $VIEWPORTS_DEBUG { @debug '@function resolve-query(<#{$queryType}>, <#{$namedRanges}>'; }
 
     @if $queryType == 'among' {
 
