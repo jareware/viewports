@@ -13,6 +13,7 @@
     "author": "Jarno Rantanen <jarno@jrw.fi>",
     "license": "MIT",
     "dependencies": {
-        "mocha": "~1.8.2"
+        "mocha": "1.8.2",
+        "node-sass": "0.8.3"
     }
 }

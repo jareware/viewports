@@ -5,43 +5,59 @@ var child_process = require('child_process');
 var SPEC_FILE_PATH = 'test/spec';
 var SPEC_FILE_FORMAT = /^([\s\S]*)\/\* it (.+) \*\/([\s\S]*)\/\* should equal \*\/([\s\S]*)$/m;
 
-describe('viewports.scss', function() {
+var specFiles = fs.readdirSync(SPEC_FILE_PATH);
+var compilers = [
+    {
+        name: 'ruby-sass',
+        command: function(file) {
+            return 'sass --style expanded ' + SPEC_FILE_PATH + '/' + file;
+        }
+    },
+    {
+        name: 'node-sass',
+        command: function(file) {
+            return './node_modules/.bin/node-sass --stdout --output=/dev/null ' + SPEC_FILE_PATH + '/' + file + ' | sed "s/\'/\\"/g" 2> /dev/null';
+        }
+    }
+];
 
-    var files = fs.readdirSync(SPEC_FILE_PATH);
+compilers.forEach(function(compiler) {
 
-    files.forEach(function(file) {
+    describe('viewports.scss on ' + compiler.name, function() {
 
-        if (!file.match(/\.scss$/))
-            return; // we're only interested in SCSS files
+        specFiles.forEach(function(file) {
 
-        var contents = fs.readFileSync(SPEC_FILE_PATH + '/' + file, 'utf8');
-        var sections = contents.match(SPEC_FILE_FORMAT);
+            if (!file.match(/\.scss$/))
+                return; // we're only interested in SCSS files
 
-        if (!sections)
-            assert.fail(file + ': File does not appear to follow the spec file format');
+            var contents = fs.readFileSync(SPEC_FILE_PATH + '/' + file, 'utf8');
+            var sections = contents.match(SPEC_FILE_FORMAT);
 
-        var description = sections[2].trim() + ' (' + file + ')';
-        var cmd = 'sass --style expanded ' + SPEC_FILE_PATH + '/' + file;
+            if (!sections)
+                assert.fail(file + ': File does not appear to follow the spec file format');
 
-        it(description, function(done) {
+            var description = sections[2].trim() + ' (' + file + ')';
 
-            child_process.exec(cmd, function(err, output, stdErr) {
+            it(description, function(done) {
 
-                if (err)
-                    assert.fail(file + ': Could not compile: ' + stdErr);
+                child_process.exec(compiler.command(file), function(err, output, stdErr) {
 
-                var sections = output.match(SPEC_FILE_FORMAT);
+                    if (err)
+                        assert.fail(file + ': Could not compile: ' + stdErr);
 
-                if (!sections)
-                    assert.fail(file + ': Malformed output from compiler: ' + output);
+                    var sections = output.match(SPEC_FILE_FORMAT);
 
-                var actual = sections[3].trim();
-                var expected = sections[4].trim();
+                    if (!sections)
+                        assert.fail(file + ': Malformed output from compiler: ' + output);
 
-                assert.equal(expected, actual);
+                    var actual = sections[3].trim();
+                    var expected = sections[4].trim();
 
-                done();
+                    assert.equal(expected, actual);
 
+                    done();
+
+                });
             });
         });
     });
