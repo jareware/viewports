@@ -1,6 +1,6 @@
 # viewports.scss
 
-`_viewports.scss` is a SASS microlibrary that makes it easier to manage media queries in responsive layouts.  It does this by allowing you to assign specific styles to named ranges of viewports, instead of repeating `@media` blocks and pixel counts all over.
+`_viewports.scss` is a SASS microlibrary that makes it easier to manage media queries in responsive layouts.  It does this by allowing you to assign specific styles to named ranges of viewports, instead of repeating `@media` blocks and pixel counts all over.  Works both on the `sass` gem and `libsass`.
 
 ## Quick demo
 
@@ -52,7 +52,12 @@ The library is contained in a single `_viewports.scss` file, which is the only t
  * The cure-for-impatience method is to just download the [main file](https://raw.github.com/jareware/viewports/master/_viewports.scss) and drop it somewhere you can `@import` it from.  That's it, ready to roll.
  * A nicer option is to use [Bower](http://bower.io/) to manage your frontend-related dependencies. `$ bower install viewports` will set the library up at `./bower_components/viewports/`.  To start tracking the dependencies as well (highly recommended), go `$ bower init; bower install viewports --save`.
 
-The only dependency is `sass >= 3.2.5`, which you can install with - you guessed it - `$ gem install sass`.
+The only dependency is either of:
+
+ * The `sass` gem (`>= 3.2.5` supported), which you can install with - you guessed it - `$ gem install sass`.
+ * `libsass`, for the speed freaks/ruby haters, which is conveniently available through either:
+   * [node-sass](https://github.com/andrew/node-sass) (`>= 0.6.5` supported)
+   * [grunt-sass](https://github.com/sindresorhus/grunt-sass) (`>= 0.7.0` supported)
 
 ## Configuration
 
@@ -132,7 +137,7 @@ This file can be compiled on its own, and executing `$ sass test/spec/above-1.sc
   p {
     color: red; } }
 ```
-The test runner simply does this for all spec files, makes the part following `/* it ` the name of the test case, and compares the parts separated by `/* should equal */`.
+The test runner simply does this for all spec files, makes the part following `/* it ` the name of the test case, and compares the parts separated by `/* should equal */`.  All test cases are executed on both supported compilers: the `sass` gem, and `libsass` (through `node-sass`).
 
 ## And finally
 
