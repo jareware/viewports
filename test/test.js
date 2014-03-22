@@ -19,6 +19,15 @@ var compilers = [
             return './node_modules/.bin/node-sass --stdout --output=/dev/null ' + SPEC_FILE_PATH + '/' + file + ' | sed "s/\'/\\"/g" 2> /dev/null';
         }
     }
+    // Enable this to use the sassc binary directly, where available (node-sass usually lags a bit behind upstream libsass)
+    /*
+    {
+        name: 'sassc',
+        command: function(file) {
+            return 'sassc ' + SPEC_FILE_PATH + '/' + file + ' | sed "s/\'/\\"/g" 2> /dev/null';
+        }
+    }
+    */
 ];
 
 compilers.forEach(function(compiler) {
