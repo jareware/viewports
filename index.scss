@@ -280,7 +280,7 @@ ul.range-scale {
         &::after { // the "pointer" triangle
             content: '';
             position: absolute;
-            left: ($cursorWidth / 2) - $arrowSize;
+            left: ($cursorWidth / 2);
             bottom: -$arrowSize;
             width: 0;
             height: 0;
