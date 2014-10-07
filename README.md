@@ -54,10 +54,16 @@ The library is contained in a single `_viewports.scss` file, which is the only t
 
 The only dependency is either of:
 
- * The `sass` gem (`>= 3.2.5` supported), which you can install with - you guessed it - `$ gem install sass`.
- * `libsass`, for the speed freaks/ruby haters, which is conveniently available through either:
-   * [node-sass](https://github.com/andrew/node-sass) (`>= 0.6.5` supported)
-   * [grunt-sass](https://github.com/sindresorhus/grunt-sass) (`>= 0.7.0` supported)
+ * The `sass` gem which you can install with - you guessed it - `$ gem install sass`.
+ * `libsass`, for the speed freaks/ruby haters, which is conveniently available through one of:
+   * [node-sass](https://github.com/andrew/node-sass)
+   * [gulp-sass](https://github.com/dlmanning/gulp-sass) (depends on `node-sass`)
+   * [grunt-sass](https://github.com/sindresorhus/grunt-sass) (depends on `node-sass`)
+
+[Tested](#test-suite) and [works](contrib/README.md) with:
+
+ * `sass` gem versions `3.2.5` to `3.4.5` (latest)
+ * `node-sass` versions `0.6.5` to `0.9.6` (latest)
 
 ## Configuration
 
