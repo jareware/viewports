@@ -1,6 +1,6 @@
 {
     "name": "viewports",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "description": "_viewports.scss is a SASS microlibrary that makes it easier to manage media queries in responsive layouts",
     "scripts": {
         "test": "./node_modules/mocha/bin/mocha --reporter spec --slow 500",
