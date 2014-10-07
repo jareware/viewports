@@ -83,9 +83,11 @@ Version list available with `$ npm view node-sass versions` (alphas etc omitted)
 
 ```
 $ cat contrib/node-sass-versions.txt | ./contrib/test-node-sass-versions.sh
-0.9.6 ... FAILURE
-0.9.5 ... FAILURE
-0.9.4 ... FAILURE
+0.9.6 ... OK
+0.9.5 ... OK
+0.9.4 ... OK
+^C
+# resume with "pre094" mode in test.js
 0.9.3 ... OK
 0.9.2 ... OK
 0.9.1 ... OK
