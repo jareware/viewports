@@ -139,6 +139,15 @@ This file can be compiled on its own, and executing `$ sass test/spec/above-1.sc
 ```
 The test runner simply does this for all spec files, makes the part following `/* it ` the name of the test case, and compares the parts separated by `/* should equal */`.  All test cases are executed on both supported compilers: the `sass` gem, and `libsass` (through `node-sass`).
 
+## Releasing
+
+ 1. Run the test suite
+ 1. Update [supported compiler versions](#installation) as necessary
+ 1. Update the version in `package.json`
+ 1. Update the version in `bower.json`
+ 1. Push to `origin master`
+ 1. Create release on GitHub
+
 ## And finally
 
 ![bill](bill.jpg)
