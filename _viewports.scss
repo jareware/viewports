@@ -184,7 +184,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
 
         $return: ();
         @each $rangeName in range-names() {
-            @if not index($namedRanges, $rangeName) { // this is NOT one of the named ranges -> include it
+            @if not(index($namedRanges, $rangeName)) { // this is NOT one of the named ranges -> include it
                 $return: append($return, bounds-for-range($rangeName));
             }
         }
@@ -235,7 +235,7 @@ $VIEWPORTS_DEFAULT_QUERY: 'among';
     @if validate-config() {
 
         $resolved: null;
-        @if not index($VIEWPORTS_QUERY_TYPES, nth($queryConfig, 1)) { // if first arg isn't a query type...
+        @if not(index($VIEWPORTS_QUERY_TYPES, nth($queryConfig, 1))) { // if first arg isn't a query type...
             $resolved: resolve-query($VIEWPORTS_DEFAULT_QUERY, $queryConfig); // ...use the default type, and treat all args as range names
         } @else { // ...otherwise first arg is the type, and rest should be treated as range names
             $resolved: resolve-query(nth($queryConfig, 1), rest-in-list($queryConfig));
