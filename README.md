@@ -62,8 +62,8 @@ The only dependency is either of:
 
 [Tested](#test-suite) and [works](contrib/README.md) with:
 
- * `sass` gem versions `3.2.5` to `3.4.5` (latest)
- * `node-sass` versions `0.6.5` to `0.9.6` (latest)
+ * `sass` gem versions `3.2.5` to `3.4.15` (latest)
+ * `node-sass` versions `0.6.5` to `3.2.0` (latest) [(with some node-sass regressions)](contrib#node-sass-tests)
 
 ## Configuration
 
