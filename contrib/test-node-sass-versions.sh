@@ -1,9 +1,17 @@
 #!/bin/bash
 
+# $ docker build -t viewports-tester contrib
+
+trap "exit 1" SIGINT SIGTERM # break while & exit on Ctrl + C
+
 while read version; do
-    npm uninstall node-sass > /dev/null 2>&1
-    npm install "node-sass@$version" > /dev/null 2>&1
-    echo -n "$(node --eval "console.log(JSON.parse(require('fs').readFileSync('./node_modules/node-sass/package.json')).version)") ... " # the node-sass binary doesn't have a --version switch :(
-    npm test > /dev/null 2>&1
+    echo -n "$version ... "
+    docker run --rm \
+        -v $(pwd)/_viewports.scss:/app/_viewports.scss:ro \
+        -v $(pwd)/test:/app/test:ro \
+        -e VIEWPORTS_NODE=1 \
+        viewports-tester \
+        "npm install -g node-sass@$version && mocha test" \
+        > /dev/null 2>&1
     if [ $? -eq 0 ]; then echo "OK"; else echo "FAILURE"; fi
 done
