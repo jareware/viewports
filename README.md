@@ -152,6 +152,7 @@ The test runner simply does this for all spec files, makes the part following `/
  1. Update the version in `package.json`
  1. Update the version in `bower.json`
  1. Push to `origin master`
+ 1. Run `$ npm publish`
  1. Create release on GitHub
 
 ## And finally
